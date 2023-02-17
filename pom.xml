@@ -12,8 +12,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.19</maven.compiler.source>
+    <maven.compiler.target>1.19</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -28,6 +28,16 @@
       <artifactId>apache-jena-libs</artifactId>
       <version>4.7.0</version>
       <type>pom</type>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.5</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.7.5</version>
     </dependency>
   </dependencies>
 </project>
