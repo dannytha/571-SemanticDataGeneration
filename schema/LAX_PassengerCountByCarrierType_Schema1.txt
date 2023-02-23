@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<rdf:RDF
+xmlns:rdf= "http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description ID="Flights">
+    <rdf:type resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+</rdf:Description>
+
+<rdf:Description ID="FlightType">
+    <rdf:type resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="#Flights"/>
+</rdf:Description>
+
+<rdf:Description ID="Arrival_Departure">
+    <rdf:type resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="#Flights"/>
+</rdf:Description>
+
+<rdf:Description ID="Domestic_International">
+    <rdf:type resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="#Flights"/>
+</rdf:Description>
+
+<rdf:Description ID="DataExtractDate">
+    <rdf:type resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Flights"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#dateTime"/>
+</rdf:Description>
+
+<rdf:Description ID="ReportPeriod">
+    <rdf:type resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Flights"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#dateTime"/>
+</rdf:Description>
+
+<rdf:Description ID="PassengerCount">
+    <rdf:type resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Flights"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+</rdf:RDF>
