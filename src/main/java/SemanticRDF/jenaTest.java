@@ -21,11 +21,13 @@ public class jenaTest {
         // create the resource
         //   and add the properties cascading style
         Resource johnSmith = model.createResource(personURI)
-                .addProperty(VCARD.FN, fullName)
+                .addProperty(VCARD.FN, fullName);/*
                 .addProperty(VCARD.N,
                             model.createResource()
                                 .addProperty(VCARD.Given, givenName)
                                 .addProperty(VCARD.Family, familyName));
+
+                                */
 
         // list the statements in the Model
         StmtIterator iter = model.listStatements();
@@ -49,6 +51,8 @@ public class jenaTest {
 
             System.out.println(" .");
         }
+
+        model.write(System.out);
     }
 }
 
