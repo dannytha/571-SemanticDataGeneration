@@ -11,8 +11,10 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NsIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.RDFDataMgr;
 
 /*
@@ -54,6 +56,11 @@ public class JenaExample {
         File f = new File("dataset/Los_Angeles_International_Airport_-_Passenger_Count_By_Carrier_Type.csv");
         System.out.println(f.canRead());
         
+        // Create special prefix namespaces
+        //String ds = "https://data.lacity.org/resource/d3a2-7j6v/";
+        String ds = "https://data.lacity.org/Transportation/Los-Angeles-International-Airport-Passenger-Count-/d3a2-7j6v/";
+        rdf.setNsPrefix("ds", ds);
+
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
 
@@ -72,15 +79,18 @@ public class JenaExample {
                 String resource_uri = "http://somewhere/JohnSmith";
 
                 //Create a resource (this pertains to a single row in the csv)
-                Resource current = rdf.createResource(resource_uri+String.valueOf(i));
+                //Resource current = rdf.createResource(ds+"/row-"+String.valueOf(i));
+                Resource root = rdf.createResource(ds+"row-"+String.valueOf(i+1));
 
                 //Loop through each element of row_data and col
                 //create properties for each 'col' element (reference schema?)
                 //its literal value is the corresponding 'row_data' element
                 for(int j = 0; j < row_data.length; j++){
-                    Property p = rdf.createProperty(resource_uri+String.valueOf(j));
+                    Property p = rdf.createProperty(ds+col[j]);
                     Literal o = rdf.createLiteral(row_data[j]);
-                    current.addProperty(p, o);
+                    //current.addProperty(p, o);
+                    rdf.add(root, p, o);
+
                 }
 
                 row_data = br.readLine().split(","); 
@@ -96,5 +106,13 @@ public class JenaExample {
         }
 
         rdf.write(System.out);
+
+        /*
+        NsIterator iter = schema.listNameSpaces();
+        while (iter.hasNext()) {
+            String next = iter.next();
+            System.out.println(next.toString());
+        }
+        */
     }
 }
