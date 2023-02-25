@@ -40,14 +40,14 @@ public class JenaExample {
         //Graph vocab = RDFDataMgr.loadGraph("schema/LAX_PassengerCountByCarrierType_Schema1.rdf");
         //Ontology api
         OntModel m = ModelFactory.createOntologyModel();
-        m.read("schema/LAX_PassengerCountByCarrierType_Schema2.rdf");
+        m.read("schema/LAX_PassengerCountByCarrierType_Schema.rdf");
         Model base = m.getBaseModel();
 
         //Create a new default model to hold schema information
         Model new_model = ModelFactory.createDefaultModel();
         //2 ways to load schema into a model
-        new_model.read("schema/LAX_PassengerCountByCarrierType_Schema2.rdf");
-        Model schema  = RDFDataMgr.loadModel("schema/LAX_PassengerCountByCarrierType_Schema2.rdf");
+        new_model.read("schema/LAX_PassengerCountByCarrierType_Schema.rdf");
+        Model schema  = RDFDataMgr.loadModel("schema/LAX_PassengerCountByCarrierType_Schema.rdf");
 
         //Create a model to hold RDF information
         Model rdf = ModelFactory.createDefaultModel();
