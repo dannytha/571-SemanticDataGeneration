@@ -57,6 +57,7 @@ public class JenaExample {
         System.out.println(f.canRead());
         
         // Create special prefix namespaces
+        //NOTE: this is where i  had to call the URI (URL of the csv) manually 
         //String ds = "https://data.lacity.org/resource/d3a2-7j6v/";
         String ds = "https://data.lacity.org/Transportation/Los-Angeles-International-Airport-Passenger-Count-/d3a2-7j6v/";
         rdf.setNsPrefix("ds", ds);
