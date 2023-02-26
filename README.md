@@ -13,7 +13,7 @@ To import the project in Eclipse:
 > - Checkbox the file and click 'Finish' to import
 
 ##### 'SemanticConverter.java' holds all necessary functions.  
-##### RDFS can be provided with CSV files.  
+##### RDFS or CSV URL can be provided in constructor.  
 ##### RDF outputs will be placed in the '/outputs' folder.
 
 
