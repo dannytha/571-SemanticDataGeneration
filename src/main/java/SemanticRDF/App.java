@@ -1,13 +1,15 @@
 package SemanticRDF;
 
-/**
- * Hello world!
- *
- */
+import java.io.FileNotFoundException;
+
 public class App 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws FileNotFoundException
     {
-        System.out.println("Hello World!" );
+       SemanticConverter lax = new SemanticConverter(
+        "schema/LAX_PassengerCountByCarrierType_Schema.rdf", 
+        "dataset/Los_Angeles_International_Airport_Passenger_Count_By_Carrier_Type.csv");
+
+        lax.csv_to_rdf();
     }
 }
