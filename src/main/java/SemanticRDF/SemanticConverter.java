@@ -17,24 +17,36 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
 
 public class SemanticConverter {
-    private String schema;
+    private String schema = "https://holder/";
     private String csv;
     private Model schema_model;
     private Model rdf_model;
 
+    public SemanticConverter(String csv_loc){
+        schema_model = null;
+        csv = csv_loc;
+    }
+
     public SemanticConverter(String schema_loc, String csv_loc){
         schema = schema_loc;
         csv = csv_loc;
-        schema_model  = RDFDataMgr.loadModel(schema);
+        if(new File(schema_loc).canRead()){
+            schema_model  = RDFDataMgr.loadModel(schema);
+        }
     }
 
     public void csv_to_rdf() throws FileNotFoundException{
         Model rdf = ModelFactory.createDefaultModel();
         File f = new File(csv);
-        ArrayList<String> ns_uri = get_ns_array();
 
-        String ds = ns_uri.get(1);
-        rdf.setNsPrefix("ds", ds);
+        String ds;
+        if(schema_model != null){
+            ArrayList<String> ns_uri = get_ns_array();
+            ds = ns_uri.get(1);
+            rdf.setNsPrefix("ds", ds);
+        }else{
+            ds = schema;
+        }
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
@@ -44,7 +56,7 @@ public class SemanticConverter {
             int i = 0;
             while(data != null){ 
                 String[] row_data = data.split(","); 
-                Resource root = rdf.createResource(ds + "row-"+String.valueOf(i+1));
+                Resource root = rdf.createResource(ds +"row-"+ String.valueOf(i+1));
 
                 for(int j = 0; j < row_data.length; j++){
                     Property p = rdf.createProperty(ds+col[j]);
@@ -66,7 +78,7 @@ public class SemanticConverter {
     }
 
     private void output_to_file(Model rdf) throws FileNotFoundException{
-        String name = csv.replaceFirst(".*/(\\w+).*","$1");;
+        String name = csv.replaceFirst(".*/(\\w+).*","$1");
         String path = "output/" + name + ".rdf";
         File file = new File(path);
 
