@@ -12,6 +12,7 @@ To import the project in Eclipse:
 > - Navigate to the location of the "pom.xml" file of this folder
 > - Checkbox the file and click 'Finish' to import
 
+#### Entry at 'main/App.java'
 ##### 'SemanticConverter.java' holds all necessary functions.  
 ##### RDFS or CSV URL can be provided in constructor.  
 ##### RDF outputs will be placed in the '/outputs' folder.
