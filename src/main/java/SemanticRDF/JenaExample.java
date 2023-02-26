@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import org.apache.jena.graph.Graph;
@@ -39,9 +40,9 @@ public class JenaExample {
         
         //Graph vocab = RDFDataMgr.loadGraph("schema/LAX_PassengerCountByCarrierType_Schema1.rdf");
         //Ontology api
-        OntModel m = ModelFactory.createOntologyModel();
-        m.read("schema/LAX_PassengerCountByCarrierType_Schema.rdf");
-        Model base = m.getBaseModel();
+        //OntModel m = ModelFactory.createOntologyModel();
+        //m.read("schema/LAX_PassengerCountByCarrierType_Schema.rdf");
+        //Model base = m.getBaseModel();
 
         //Create a new default model to hold schema information
         Model new_model = ModelFactory.createDefaultModel();
@@ -60,7 +61,16 @@ public class JenaExample {
         //NOTE: this is where i  had to call the URI (URL of the csv) manually 
         //String ds = "https://data.lacity.org/resource/d3a2-7j6v/";
         String ds = "https://data.lacity.org/Transportation/Los-Angeles-International-Airport-Passenger-Count-/d3a2-7j6v/";
-        rdf.setNsPrefix("ds", ds);
+
+        //attempting to just read from schema
+        ArrayList<String> ns_uri = new ArrayList<>();
+        NsIterator iter = schema.listNameSpaces();
+        while (iter.hasNext()) {
+            String next = iter.next();
+            ns_uri.add(next.toString());
+        }
+
+        rdf.setNsPrefix("ds", ns_uri.get(1));
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
@@ -77,7 +87,7 @@ public class JenaExample {
                 //System.out.println(Arrays.toString(row_data));
                 
                 //Holder
-                String resource_uri = "http://somewhere/JohnSmith";
+                //String resource_uri = "http://somewhere/JohnSmith";
 
                 //Create a resource (this pertains to a single row in the csv)
                 //Resource current = rdf.createResource(ds+"/row-"+String.valueOf(i));
@@ -107,13 +117,5 @@ public class JenaExample {
         }
 
         rdf.write(System.out);
-
-        /*
-        NsIterator iter = schema.listNameSpaces();
-        while (iter.hasNext()) {
-            String next = iter.next();
-            System.out.println(next.toString());
-        }
-        */
     }
 }
