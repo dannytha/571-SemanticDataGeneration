@@ -14,5 +14,6 @@ public class App
         covid.csv_to_rdf();
         lax.csv_to_rdf();
         
+        
     }
 }
