@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<rdf:RDF
+xmlns:rdf= "http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+xmlns:foaf="http://xmlns.com/foaf/0.1/" 
+xmlns:ds="https://catalog.data.gov/dataset/la-county-covid-cases/resource/627584ed-5b0c-4c94-a549-e258d2119b7f/"
+>
+
+	
+<rdf:Description rdf:ID="Report">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/> 
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <ds:about rdf:resource="https://catalog.data.gov/dataset/la-county-covid-cases/resource/627584ed-5b0c-4c94-a549-e258d2119b7f/#"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="County">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="State">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="Fips">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="Date">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#date"/>
+</rdf:Description>
+
+
+<rdf:Description rdf:ID="Lat">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#decimal"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="Lon">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#decimal"/>
+</rdf:Description>
+
+
+<rdf:Description rdf:ID="Cases">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="Deaths">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="People_Tested">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="State_Cases">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="State_Deaths">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="New_Cases">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="New_Deaths">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="New_State_Cases">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+
+<rdf:Description rdf:ID="New_State_Deaths">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="#Report"/>
+    <rdfs:range rdf:resource="https://www.w3.org/TR/xmlschema11-2/#integer"/>
+</rdf:Description>
+</rdf:RDF>
