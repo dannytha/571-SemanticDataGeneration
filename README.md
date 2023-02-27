@@ -3,7 +3,7 @@
 #### **Language: Java**
 ###### Tested with:
 ```Eclipse```  
-```JRE:1.19 (?)``` 
+```JDK 19``` 
 
 ## **Steps to run with MAVEN:**
 To import the project in Eclipse:
