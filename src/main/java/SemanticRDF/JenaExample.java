@@ -54,7 +54,7 @@ public class JenaExample {
         Model rdf = ModelFactory.createDefaultModel();
 
         // Read and parse CSV dataset
-        File f = new File("dataset/Los_Angeles_International_Airport_-_Passenger_Count_By_Carrier_Type.csv");
+        File f = new File("dataset/Los_Angeles_International_Airport_Passenger_Count_By_Carrier_Type.csv");
         System.out.println(f.canRead());
         
         // Create special prefix namespaces
