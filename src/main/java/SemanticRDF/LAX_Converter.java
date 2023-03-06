@@ -6,7 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.naming.spi.ResolveResult;
 
@@ -19,8 +25,10 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NsIterator;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFWriterI;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
@@ -34,7 +42,7 @@ public class LAX_Converter {
 
     private Model rdf;
     private String csv;
-    private String homepage = "https://FlighReport.com/";
+    private String homepage = "https://FlightReport.com/";
 
     //lax constructor
     public LAX_Converter(String loc ){
@@ -43,32 +51,24 @@ public class LAX_Converter {
 
 
     public void csv_to_rdf() throws FileNotFoundException{
-        OntModel rdf = ModelFactory.createOntologyModel();
-        Model schema = ModelFactory.createDefaultModel();
-        File f = new File(csv);
-
+        Model rdf = ModelFactory.createDefaultModel();
         rdf.setNsPrefix("fr", homepage);
-
+        Model schema = schemaCreate(); 
+        schema.setNsPrefix("fr", homepage);
+        rdf.add(schema);
+        File f = new File(csv);
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String[] col = br.readLine().split(","); //column names
             String data = br.readLine(); //first row of data
 
             int i = 0;
-            while(data != null && i<1){ 
+            while(data != null){ 
                 
                 String[] row_data = data.split(","); 
                 create_resource(row_data, rdf, i);
 
-                /*
-                Resource root = rdf.createResource(ds +"row-"+ String.valueOf(i+1));
-
-                for(int j = 0; j < row_data.length; j++){
-                    Property p = rdf.createProperty(ds+col[j]);
-                    Literal o = rdf.createLiteral(row_data[j]);
-                    rdf.add(root, p, o);
-                }
-                */
+                
                 //get next line
                 data = br.readLine();
                 i++;
@@ -81,132 +81,153 @@ public class LAX_Converter {
             e.printStackTrace();
         }
 
-        rdf.write(System.out);
+        //rdf.write(System.out);
         //rdf_model = rdf;
         output_to_file(rdf);
     }
-    public Model create_schema(){
-        Model model = ModelFactory.createDefaultModel();
 
-        Resource country = model.createResource(homepage+"Country");
-        country.addProperty(RDF.type,RDFS.Class);
-        Resource airport = model.createResource(homepage+"Airport");
+    public Model schemaCreate(){
+        Model schema = ModelFactory.createDefaultModel();
+
+        Resource flightReport = schema.createResource(homepage+"FlightReport");
+        flightReport.addProperty(RDF.type,RDFS.Class);
+        Resource airport = schema.createResource(homepage+"Airport");
         airport.addProperty(RDF.type,RDFS.Class);
-        Property located_in = model.createProperty(homepage+"locatedIn");
-        located_in.addProperty(RDFS.domain, airport);
-        located_in.addProperty(RDFS.range, country);
-        Property reported_from = model.createProperty(homepage+"reportedFrom");
-        
-
-        Resource flights = model.createResource(homepage+"Flights");
+        Resource country = schema.createResource(homepage+"Country");
+        country.addProperty(RDF.type,RDFS.Class);
+        Resource flights = schema.createResource(homepage+"Flights");
         flights.addProperty(RDF.type,RDFS.Class);
-        Resource flight_reports = model.createResource(homepage+"FlightReport");
-        flight_reports.addProperty(RDF.type,RDFS.Class);
-        Property reports_on = model.createProperty(homepage+"reportsOn");
-
-        reported_from.addProperty(RDFS.domain, airport);
-        reported_from.addProperty(RDFS.range, flight_reports);
-        reports_on.addProperty(RDFS.domain, flights);
-        reports_on.addProperty(RDFS.range, reports_on);
-        
-
-        Resource date_time = model.createResource(homepage+"DateTime");
-        date_time.addProperty(RDF.type,RDFS.Class);
-        //date_time.addProperty(RDFS.range, XSD:datetime)
-        Resource extract = model.createResource(homepage+"ExtractDate");
-        extract.addProperty(RDF.type,RDFS.Class);
-        extract.addProperty(RDFS.subClassOf, date_time);
-        Resource report_period = model.createResource(homepage+"ReportPeriod");
-        report_period.addProperty(RDF.type,RDFS.Class);
-        report_period.addProperty(RDFS.subClassOf, date_time);
-        Property extracted_date = model.createProperty(homepage+"extractedDate");
-        Property reported_date = model.createProperty(homepage+"reportedDate");
-        //subClassof
-
-        Resource direction = model.createResource(homepage+"Direction");
+        Resource flightType = schema.createResource(homepage+"FlightType");
+        flightType.addProperty(RDF.type,RDFS.Class);
+        Resource charter = schema.createResource(homepage+"Charter");
+        charter.addProperty(RDFS.subClassOf,flightType);
+        Resource scheduledCarrier = schema.createResource(homepage+"ScheduledCarrier");
+        scheduledCarrier.addProperty(RDFS.subClassOf,flightType);
+        Resource commuter = schema.createResource(homepage+"Commuter");
+        commuter.addProperty(RDFS.subClassOf,flightType);
+        Resource direction = schema.createResource(homepage+"Direction");
         direction.addProperty(RDF.type,RDFS.Class);
-        Resource arrival = model.createResource(homepage+"Arrival");
-        arrival.addProperty(RDF.type,RDFS.Class);
-        arrival.addProperty(RDFS.subClassOf, direction);
-        Resource departure = model.createResource(homepage+"Departure");
-        departure.addProperty(RDF.type,RDFS.Class);
-        departure.addProperty(RDFS.subClassOf, direction);
-        Property has_direction = model.createProperty(homepage+"hasDirection");
+        Resource departure = schema.createResource(homepage+"Departure");
+        departure.addProperty(RDFS.subClassOf,direction);
+        Resource arrival = schema.createResource(homepage+"Arrival");
+        arrival.addProperty(RDFS.subClassOf,direction);
+        Resource travelType = schema.createResource(homepage+"TravelType");
+        travelType.addProperty(RDF.type,RDFS.Class);
+        Resource international = schema.createResource(homepage+"International");
+        international.addProperty(RDFS.subClassOf,travelType);
+        Resource domestic = schema.createResource(homepage+"Domestic");
+        domestic.addProperty(RDFS.subClassOf,travelType);
+        Resource dateTime = schema.createResource(homepage+"DateTime");
+        dateTime.addProperty(RDF.type,RDFS.Class);
+        Resource extractionDate = schema.createResource(homepage+"ExtractionDate");
+        extractionDate.addProperty(RDFS.subClassOf,dateTime);
+        Resource reportPeriod = schema.createResource(homepage+"ReportPeriod");
+        reportPeriod.addProperty(RDFS.subClassOf,dateTime);
 
-        Resource travel_type = model.createResource(homepage+"TravelType");
-        travel_type.addProperty(RDF.type,RDFS.Class);
-        Resource domestic = model.createResource(homepage+"Domestic");
-        domestic.addProperty(RDF.type,RDFS.Class);
-        domestic.addProperty(RDFS.subClassOf, travel_type);
-        Resource international = model.createProperty(homepage+"International");
-        international.addProperty(RDF.type,RDFS.Class);
-        international.addProperty(RDFS.subClassOf, travel_type);
+        Property locatedIn = schema.createProperty(homepage+"locatedIn");
+        locatedIn.addProperty(RDFS.domain, airport);
+        locatedIn.addProperty(RDFS.range, country);
+        Property reportedFrom = schema.createProperty(homepage+"reportedFrom");
+        reportedFrom.addProperty(RDFS.domain, flightReport);
+        reportedFrom.addProperty(RDFS.range, airport);
+        Property countedPassengers = schema.createProperty(homepage+"countedPassengers");
+        countedPassengers.addProperty(RDFS.domain, flightReport);
+        countedPassengers.addProperty(RDFS.range, XSD.integer);
+        Property reportsOn = schema.createProperty(homepage+"reportsOn");
+        reportsOn.addProperty(RDFS.domain, flightReport);
+        reportsOn.addProperty(RDFS.range, flights);
+        Property extractedDate = schema.createProperty(homepage+"extractedDate");
+        extractedDate.addProperty(RDFS.domain, flightReport);
+        extractedDate.addProperty(RDFS.range, extractionDate);
+        Property reportedDate = schema.createProperty(homepage+"reportedDate");
+        reportedDate.addProperty(RDFS.domain, flightReport);
+        reportedDate.addProperty(RDFS.range, reportPeriod);
+        Property isOfFlightType = schema.createProperty(homepage+"isOfFlightType");
+        isOfFlightType.addProperty(RDFS.domain, flights);
+        isOfFlightType.addProperty(RDFS.range, flightType);
+        Property hasTravelType = schema.createProperty(homepage+"hasTravelType");
+        hasTravelType.addProperty(RDFS.domain, flights);
+        hasTravelType.addProperty(RDFS.range, travelType);
+        Property hasDirection = schema.createProperty(homepage+"hasDirection");
+        hasDirection.addProperty(RDFS.domain, flights);
+        hasDirection.addProperty(RDFS.range, direction);
+        Property hasReportID = schema.createProperty(homepage+"hasReportID");
+        hasReportID.addProperty(RDFS.domain, flightReport);
+        hasReportID.addProperty(RDFS.range, XSD.integer);
+        Property hasDateTime = schema.createProperty(homepage+"hasDateTime");
+        hasDateTime.addProperty(RDFS.domain, dateTime);
+        hasDateTime.addProperty(RDFS.range, XSD.dateTime);
 
-        Property has_travel_type = model.createProperty(homepage+"hasTravelType");
+        // Associate Classes with Properties
 
-
-
-        Resource flight_type = model.createResource(homepage+"FlightType");
-        flight_type.addProperty(RDF.type,RDFS.Class);
-
-        Resource charter = model.createResource(homepage+"Charter");
-        charter.addProperty(RDF.type,RDFS.Class);
-        charter.addProperty(RDFS.subClassOf, flight_type);
-
-        Resource scheduled_carrier = model.createResource(homepage+"ScheduledCarrier");
-        scheduled_carrier.addProperty(RDF.type,RDFS.Class);
-        scheduled_carrier.addProperty(RDFS.subClassOf, flight_type);
-
-        Resource commuter = model.createResource(homepage+"Commuter");
-        commuter.addProperty(RDF.type,RDFS.Class);
-        commuter.addProperty(RDFS.subClassOf, flight_type);
-
-        Property isof_FlightType = model.createProperty(homepage+"isOfFlightType");
-
-
-        return model;
+        return schema;
     }
 
-    public void create_resource(String[] row_data, OntModel model, int i){
+
+    public void create_resource(String[] row_data, Model model, int i){
         /*
          * initialization 
          */
-        Resource root = model.createResource("https://row-number/"+i); //root = flightsreport
-        Resource flight_reports = model.createResource();
-        //flight_reports.addProperty(RDF.type, RDFS.Class);
-        //root.addProperty(RDF.type, flight_reports);
-        Resource flights = model.createResource();
+        String rowReference = homepage+"row/"+i;
+        Resource root = model.createResource(rowReference); //root = flightsreport
+        Resource flight_reports = model.createResource(homepage+"FlightReport");
+        Property reportIDProp = model.getProperty(homepage+"hasReportID");
+        Literal reportID = model.createLiteral("FRID"+i);
+        model.add(root, reportIDProp, reportID);
+        root.addProperty(RDF.type, flight_reports);
+        Resource flights = model.createResource(rowReference+"/flights");
 
-        Resource country = model.createResource();
-        Resource airport = model.createResource();
-        ObjectProperty located_in = model.createObjectProperty(homepage+"locatedIn");
-        ObjectProperty reported_from = model.createObjectProperty(homepage+"reportedFrom");
+        Resource country = model.createResource("https://countries.gov/UnitedStates");
+        Resource airport = model.createResource("https://flylax.com/");
+        Property located_in = model.createProperty(homepage+"locatedIn");
+        Property reported_from = model.createProperty(homepage+"reportedFrom");
 
         airport.addProperty(located_in, country);
-        //root.addProperty(reported_from, airport);
         model.add(root, reported_from, airport);
 
         /*
          * extract date
          */
-        Resource date_time = model.createResource(homepage+"DateTime");
-        date_time.addProperty(RDFS.range, XSD.dateTime);
+        //Resource date_time = model.createResource(homepage+"DateTime");
+        Resource extract = model.createResource(rowReference+"/extractDate");
+        Property extracted_date = model.createProperty(homepage+"extractedDate");
+        String dateTimeCSV = row_data[0].replace("/", "-");
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
+        try {
+            Date date = df.parse(dateTimeCSV);
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(date);
+            XSDDateTime dateTimeXSD = new XSDDateTime(cal);
+            Literal extractedLiteral = model.createTypedLiteral(dateTimeXSD);
+            Property hasDateTime = model.createProperty(homepage+"hasDateTime");
+            extract.addLiteral(hasDateTime, extractedLiteral); 
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        model.add(root, extracted_date, extract);
 
-
-        Resource extract = model.createResource(homepage+"ExtractDate");
-        ObjectProperty extracted_date = model.createObjectProperty(homepage+"extractedDate");
-        extract.addProperty(RDFS.subClassOf, date_time);
-        extracted_date.addProperty(RDFS.subClassOf, date_time);
-        //extracted_date.addProperty(RDFS.domain, root);
-        extracted_date.addProperty(RDFS.range, date_time);
-        model.add(root, extracted_date, row_data[0]);
+        //Sample of dateTimeCSV: 05/03/2021 03:08:02 PM
         
         /*
          * report period
          */
-        Resource report_period = model.createResource(homepage+"ReportPeriod");
-        ObjectProperty reported_date = model.createObjectProperty(homepage+"reportedDate");
-        report_period.addProperty(RDFS.subClassOf, date_time);
+        Resource report_period = model.createResource(rowReference+"/reportPeriod");
+        Property reported_date = model.createProperty(homepage+"reportedDate");
+        String reportdateTimeCSV = row_data[1].replace("/", "-");
+        try {
+            Date date = df.parse(reportdateTimeCSV);
+            Calendar reportcal = new GregorianCalendar();
+            reportcal.setTime(date);
+            XSDDateTime reportdateTimeXSD = new XSDDateTime(reportcal);
+            Literal reportedLiteral = model.createTypedLiteral(reportdateTimeXSD);
+            Property hasDateTime = model.createProperty(homepage+"hasDateTime");
+            report_period.addLiteral(hasDateTime, reportedLiteral); 
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        model.add(root, reported_date, report_period);
 
         /*
          * arrival/departure
@@ -214,11 +235,7 @@ public class LAX_Converter {
         Resource direction = model.createResource(homepage+"Direction");
         Resource arrival = model.createResource(homepage+"Arrival");
         Resource departure = model.createResource(homepage+"Departure");
-        ObjectProperty has_direction = model.createObjectProperty(homepage+"hasDirection");
-        //has_direction.addProperty(RDFS.domain, flights);
-        //has_direction.addProperty(RDFS.range,RDFS.);
-        arrival.addProperty(RDFS.subClassOf, direction);
-        departure.addProperty(RDFS.subClassOf, direction);
+        Property has_direction = model.createProperty(homepage+"hasDirection");
         if(row_data[2].equals("Arrival")){
             flights.addProperty(has_direction, arrival);
         }else{
@@ -232,8 +249,6 @@ public class LAX_Converter {
         ObjectProperty has_travel_type = model.createObjectProperty(homepage+"hasTravelType");
         Resource domestic = model.createResource(homepage+"Domestic");
         Resource international = model.createProperty(homepage+"International");
-        domestic.addProperty(RDFS.subClassOf, travel_type);
-        international.addProperty(RDFS.subClassOf, travel_type);
         if(row_data[3].equals("Domestic")){
             flights.addProperty(has_travel_type, domestic);
         }else{
@@ -250,9 +265,6 @@ public class LAX_Converter {
         Resource charter = model.createResource(homepage+"Charter");
         Resource scheduled_carrier = model.createResource(homepage+"ScheduledCarrier");
         Resource commuter = model.createResource(homepage+"Commuter");
-        charter.addProperty(RDFS.subClassOf, flight_type);
-        scheduled_carrier.addProperty(RDFS.subClassOf, flight_type);
-        commuter.addProperty(RDFS.subClassOf, flight_type);
 
         if(row_data[4].equals("Charter")){
             flights.addProperty(isof_FlightType, charter);
@@ -266,7 +278,7 @@ public class LAX_Converter {
          * passenger counter
          */
         Literal pass_count = model.createTypedLiteral(Integer.valueOf(row_data[5]));
-        DatatypeProperty counted_pass = model.createDatatypeProperty(homepage+"countedPassenger");
+        Property counted_pass = model.createProperty(homepage+"countedPassengers");
         //root.addLiteral(counted_pass, pass_count);
         model.add(root, counted_pass, pass_count);
         
