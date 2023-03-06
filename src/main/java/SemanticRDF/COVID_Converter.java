@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.naming.ldap.HasControls;
 import javax.naming.spi.ResolveResult;
 
 import org.apache.jena.datatypes.xsd.XSDDateTime;
@@ -56,7 +57,7 @@ public class COVID_Converter {
             String data = br.readLine(); //first row of data
 
             int i = 0;
-            while(data != null && i<3){ 
+            while(data != null){ 
                 
                 String[] row_data = data.split(","); 
                 create_resource(row_data, rdf, i);
@@ -127,20 +128,47 @@ public class COVID_Converter {
 
         ObjectProperty has_date = model.createObjectProperty(homepage+"hasDate");
         ObjectProperty reported_in = model.createObjectProperty(homepage+"reportedIn");
-        ObjectProperty isAReport = model.createObjectProperty(homepage+"isAReport");
+        //ObjectProperty isAReport = model.createObjectProperty(homepage+"isAReport");
         ObjectProperty has_a = model.createObjectProperty(homepage+"hasA");
 
-        covid_report.addProperty(isAReport, report);
+        //covid_report.addProperty(isAReport, report);
+
+        has_date.addProperty(RDFS.domain, report);
+        reported_in.addProperty(RDFS.domain, report);
+        has_a.addProperty(RDFS.domain, location);
+        has_a.addProperty(RDFS.domain, state);
+        has_date.addProperty(RDFS.range, extraction_date);
+        reported_in.addProperty(RDFS.range, location);
+        has_a.addProperty(RDFS.range, state);
+        has_a.addProperty(RDFS.range, county);
         
         DatatypeProperty county_case_count = model.createDatatypeProperty(homepage+"CountyCaseCount");
         DatatypeProperty county_death_count = model.createDatatypeProperty(homepage+"CountyDeathCount");
         DatatypeProperty new_county_case_count = model.createDatatypeProperty(homepage+"NewCountyCaseCount");
         DatatypeProperty new_county_death_count = model.createDatatypeProperty(homepage+"NewCountyDeathCount");
 
+        county_case_count.addProperty(RDFS.domain, county_count);
+        county_death_count.addProperty(RDFS.domain, county_count);
+        new_county_case_count.addProperty(RDFS.domain, county_count);
+        new_county_death_count.addProperty(RDFS.domain, county_count);
+        county_case_count.addProperty(RDFS.range, XSD.integer);
+        county_death_count.addProperty(RDFS.range, XSD.integer);
+        new_county_case_count.addProperty(RDFS.range, XSD.integer);
+        new_county_death_count.addProperty(RDFS.range, XSD.integer);
+
         DatatypeProperty state_case_count = model.createDatatypeProperty(homepage+"StateCaseCount");
         DatatypeProperty state_death_count = model.createDatatypeProperty(homepage+"StateDeathCount");
         DatatypeProperty new_state_case_count = model.createDatatypeProperty(homepage+"NewStateCaseCount");
         DatatypeProperty new_state_death_count = model.createDatatypeProperty(homepage+"NewStateDeathCount");
+
+        state_case_count.addProperty(RDFS.domain, state_count);
+        state_death_count.addProperty(RDFS.domain, state_count);
+        new_state_case_count.addProperty(RDFS.domain, state_count);
+        new_state_death_count.addProperty(RDFS.domain, state_count);
+        state_case_count.addProperty(RDFS.range, XSD.integer);
+        state_death_count.addProperty(RDFS.range, XSD.integer);
+        new_state_case_count.addProperty(RDFS.range, XSD.integer);
+        new_state_death_count.addProperty(RDFS.range, XSD.integer);
 
         DatatypeProperty lon = model.createDatatypeProperty(homepage+"Lon");
         DatatypeProperty lat = model.createDatatypeProperty(homepage+"Lat");
@@ -149,8 +177,29 @@ public class COVID_Converter {
         DatatypeProperty county_name = model.createDatatypeProperty(homepage+"CountyName");
         DatatypeProperty date = model.createDatatypeProperty(homepage+"Date");
 
+        lon.addProperty(RDFS.domain, county);
+        lat.addProperty(RDFS.domain, county);
+        fips.addProperty(RDFS.domain, county);
+        state_name.addProperty(RDFS.domain, county);
+        county_name.addProperty(RDFS.domain, county);
+        date.addProperty(RDFS.domain, extraction_date);
+        lon.addProperty(RDFS.range, XSD.decimal);
+        lat.addProperty(RDFS.range, XSD.decimal);
+        fips.addProperty(RDFS.range, XSD.integer);
+        state_name.addProperty(RDFS.range, XSD.xstring);
+        county_name.addProperty(RDFS.range, XSD.xstring);
+        date.addProperty(RDFS.range, XSD.dateTime);
+
+
         ObjectProperty has_county_count = model.createObjectProperty(homepage+"hasCountyCount");
         ObjectProperty has_state_count = model.createObjectProperty(homepage+"hasStateCount");
+
+        has_county_count.addProperty(RDFS.domain, report);
+        has_state_count.addProperty(RDFS.domain, report);
+        has_county_count.addProperty(RDFS.range, county_count);
+        has_state_count.addProperty(RDFS.range, state_count);
+
+        report.addProperty(RDFS.subClassOf, covid_report);
 
         //county info -> county_count
         covid_report.addProperty(has_county_count, cc_individual);
