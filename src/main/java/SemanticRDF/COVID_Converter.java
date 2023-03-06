@@ -43,7 +43,7 @@ public class COVID_Converter {
 
 
     public void csv_to_rdf() throws FileNotFoundException{
-        Model rdf = ModelFactory.createDefaultModel();
+        OntModel rdf = ModelFactory.createOntologyModel();
         Model schema = ModelFactory.createDefaultModel();
         File f = new File(csv);
 
@@ -92,13 +92,13 @@ public class COVID_Converter {
         return model;
     }
 
-    public void create_resource(String[] row_data, Model model, int i){
+    public void create_resource(String[] row_data, OntModel model, int i){
         /*
          * initialization 
          */
-        Resource root = model.createResource(homepage+"row-number/"+i);
+        Resource covid_report = model.createResource(homepage+"row-number/"+i);
 
-        Resource covid_report = model.createResource(homepage+"CovidReport");
+        Resource report = model.createResource(homepage+"Report");
         Resource extraction_date = model.createResource(homepage+"ExtractionDate");
         Resource date_time = model.createResource(homepage+"DateTime");
         Resource county_count = model.createResource(homepage+"CountyCount");
@@ -107,35 +107,45 @@ public class COVID_Converter {
         Resource state = model.createResource(homepage+"State");
         Resource county = model.createResource(homepage+"County");
 
-        Property has_date = model.createProperty(homepage+"hasDate");
-        Property reported_in = model.createProperty(homepage+"reportedIn");
+        report.addProperty(RDF.type, RDFS.Class);
+        county_count.addProperty(RDF.type, RDFS.Class);
+        state_count.addProperty(RDF.type, RDFS.Class);
+        location.addProperty(RDF.type, RDFS.Class);
+        state.addProperty(RDF.type, RDFS.Class);
+        county.addProperty(RDF.type, RDFS.Class);
+
+        covid_report.addProperty(RDF.type, RDFS.Class);
+        covid_report.addProperty(RDF.type, report);
+
+        ObjectProperty has_date = model.createObjectProperty(homepage+"hasDate");
+        ObjectProperty reported_in = model.createObjectProperty(homepage+"reportedIn");
         //Property isAReport = model.createProperty(homepage+"isAReport");
-        Property is_in = model.createProperty(homepage+"isIn");
+        ObjectProperty is_in = model.createObjectProperty(homepage+"isIn");
         
-        Property county_case_count = model.createProperty(homepage+"CountyCaseCount");
-        Property county_death_count = model.createProperty(homepage+"CountyDeathCount");
-        Property new_county_case_count = model.createProperty(homepage+"NewCountyCaseCount");
-        Property new_county_death_count = model.createProperty(homepage+"NewCountyDeathCount");
+        DatatypeProperty county_case_count = model.createDatatypeProperty(homepage+"CountyCaseCount");
+        DatatypeProperty county_death_count = model.createDatatypeProperty(homepage+"CountyDeathCount");
+        DatatypeProperty new_county_case_count = model.createDatatypeProperty(homepage+"NewCountyCaseCount");
+        DatatypeProperty new_county_death_count = model.createDatatypeProperty(homepage+"NewCountyDeathCount");
 
-        Property state_case_count = model.createProperty(homepage+"StateCaseCount");
-        Property state_death_count = model.createProperty(homepage+"StateDeathCount");
-        Property new_state_case_count = model.createProperty(homepage+"NewStateCaseCount");
-        Property new_state_death_count = model.createProperty(homepage+"NewStateDeathCount");
+        DatatypeProperty state_case_count = model.createDatatypeProperty(homepage+"StateCaseCount");
+        DatatypeProperty state_death_count = model.createDatatypeProperty(homepage+"StateDeathCount");
+        DatatypeProperty new_state_case_count = model.createDatatypeProperty(homepage+"NewStateCaseCount");
+        DatatypeProperty new_state_death_count = model.createDatatypeProperty(homepage+"NewStateDeathCount");
 
-        Property lon = model.createProperty(homepage+"Lon");
-        Property lat = model.createProperty(homepage+"Lat");
-        Property fips = model.createProperty(homepage+"fips");
+        DatatypeProperty lon = model.createDatatypeProperty(homepage+"Lon");
+        DatatypeProperty lat = model.createDatatypeProperty(homepage+"Lat");
+        DatatypeProperty fips = model.createDatatypeProperty(homepage+"fips");
 
-        Property has_county_count = model.createProperty(homepage+"hasCountyCount");
-        Property has_state_count = model.createProperty(homepage+"hasStateCount");
+        ObjectProperty has_county_count = model.createObjectProperty(homepage+"hasCountyCount");
+        ObjectProperty has_state_count = model.createObjectProperty(homepage+"hasStateCount");
 
         covid_report.addProperty(has_county_count, county_count);
         covid_report.addProperty(has_state_count, state_count);
         covid_report.addProperty(has_date, extraction_date);
         covid_report.addProperty(reported_in, location);
 
-        //county_count.addProperty(county_case_count, row_data[6]);
-        model.add(root, county_case_count, row_data[6]);
+        county_count.addProperty(county_case_count, row_data[6]);
+        //model.add(root, county_case_count, row_data[6]);
         county_count.addProperty(county_death_count, row_data[7]);
         county_count.addProperty(new_county_case_count, row_data[11]);
         county_count.addProperty(new_county_death_count, row_data[12]);
@@ -154,6 +164,8 @@ public class COVID_Converter {
         county.addProperty(lat, row_data[4]);
         county.addProperty(lon, row_data[5]);
 
+        model.add(covid_report,has_county_count, county_count);
+        //model.add()
         // Add extraction date literal
     }
 
