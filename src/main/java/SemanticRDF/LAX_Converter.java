@@ -10,7 +10,9 @@ import java.util.ArrayList;
 
 import javax.naming.spi.ResolveResult;
 
+import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.ontology.DatatypeProperty;
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -20,6 +22,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 public class LAX_Converter {
     /*
@@ -40,7 +43,10 @@ public class LAX_Converter {
 
     public void csv_to_rdf() throws FileNotFoundException{
         Model rdf = ModelFactory.createDefaultModel();
+        Model schema = ModelFactory.createDefaultModel();
         File f = new File(csv);
+
+        //rdf.setNsPrefix("fr", homepage);
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
@@ -48,7 +54,7 @@ public class LAX_Converter {
             String data = br.readLine(); //first row of data
 
             int i = 0;
-            while(data != null){ 
+            while(data != null && i<5){ 
                 
                 String[] row_data = data.split(","); 
                 create_resource(row_data, rdf, i);
@@ -74,15 +80,100 @@ public class LAX_Converter {
             e.printStackTrace();
         }
 
-        //rdf.write(System.out);
+        rdf.write(System.out);
         //rdf_model = rdf;
         output_to_file(rdf);
     }
+    public Model create_schema(){
+        Model model = ModelFactory.createDefaultModel();
+
+        Resource country = model.createResource(homepage+"Country");
+        country.addProperty(RDF.type,RDFS.Class);
+        Resource airport = model.createResource(homepage+"Airport");
+        airport.addProperty(RDF.type,RDFS.Class);
+        Property located_in = model.createProperty(homepage+"locatedIn");
+        located_in.addProperty(RDFS.domain, airport);
+        located_in.addProperty(RDFS.range, country);
+        Property reported_from = model.createProperty(homepage+"reportedFrom");
+        
+
+        Resource flights = model.createResource(homepage+"Flights");
+        flights.addProperty(RDF.type,RDFS.Class);
+        Resource flight_reports = model.createResource(homepage+"FlightReport");
+        flight_reports.addProperty(RDF.type,RDFS.Class);
+        Property reports_on = model.createProperty(homepage+"reportsOn");
+
+        reported_from.addProperty(RDFS.domain, airport);
+        reported_from.addProperty(RDFS.range, flight_reports);
+        reports_on.addProperty(RDFS.domain, flights);
+        reports_on.addProperty(RDFS.range, reports_on);
+        
+
+        Resource date_time = model.createResource(homepage+"DateTime");
+        date_time.addProperty(RDF.type,RDFS.Class);
+        //date_time.addProperty(RDFS.range, XSD:datetime)
+        Resource extract = model.createResource(homepage+"ExtractDate");
+        extract.addProperty(RDF.type,RDFS.Class);
+        extract.addProperty(RDFS.subClassOf, date_time);
+        Resource report_period = model.createResource(homepage+"ReportPeriod");
+        report_period.addProperty(RDF.type,RDFS.Class);
+        report_period.addProperty(RDFS.subClassOf, date_time);
+        Property extracted_date = model.createProperty(homepage+"extractedDate");
+        Property reported_date = model.createProperty(homepage+"reportedDate");
+        //subClassof
+
+        Resource direction = model.createResource(homepage+"Direction");
+        direction.addProperty(RDF.type,RDFS.Class);
+        Resource arrival = model.createResource(homepage+"Arrival");
+        arrival.addProperty(RDF.type,RDFS.Class);
+        arrival.addProperty(RDFS.subClassOf, direction);
+        Resource departure = model.createResource(homepage+"Departure");
+        departure.addProperty(RDF.type,RDFS.Class);
+        departure.addProperty(RDFS.subClassOf, direction);
+        Property has_direction = model.createProperty(homepage+"hasDirection");
+
+        Resource travel_type = model.createResource(homepage+"TravelType");
+        travel_type.addProperty(RDF.type,RDFS.Class);
+        Resource domestic = model.createResource(homepage+"Domestic");
+        domestic.addProperty(RDF.type,RDFS.Class);
+        domestic.addProperty(RDFS.subClassOf, travel_type);
+        Resource international = model.createProperty(homepage+"International");
+        international.addProperty(RDF.type,RDFS.Class);
+        international.addProperty(RDFS.subClassOf, travel_type);
+
+        Property has_travel_type = model.createProperty(homepage+"hasTravelType");
+
+
+
+        Resource flight_type = model.createResource(homepage+"FlightType");
+        flight_type.addProperty(RDF.type,RDFS.Class);
+
+        Resource charter = model.createResource(homepage+"Charter");
+        charter.addProperty(RDF.type,RDFS.Class);
+        charter.addProperty(RDFS.subClassOf, flight_type);
+
+        Resource scheduled_carrier = model.createResource(homepage+"ScheduledCarrier");
+        scheduled_carrier.addProperty(RDF.type,RDFS.Class);
+        scheduled_carrier.addProperty(RDFS.subClassOf, flight_type);
+
+        Resource commuter = model.createResource(homepage+"Commuter");
+        commuter.addProperty(RDF.type,RDFS.Class);
+        commuter.addProperty(RDFS.subClassOf, flight_type);
+
+        Property isof_FlightType = model.createProperty(homepage+"isOfFlightType");
+
+
+        return model;
+    }
+
     public void create_resource(String[] row_data, Model model, int i){
         /*
          * initialization 
          */
         Resource root = model.createResource("https://row-number/"+i); //root = flightsreport
+        Resource flight_reports = model.createResource();
+        //flight_reports.addProperty(RDF.type, RDFS.Class);
+        //root.addProperty(RDF.type, flight_reports);
         Resource flights = model.createResource();
 
         Resource country = model.createResource();
@@ -91,7 +182,8 @@ public class LAX_Converter {
         Property reported_from = model.createProperty(homepage+"reportedFrom");
 
         airport.addProperty(located_in, country);
-        root.addProperty(reported_from, airport);
+        //root.addProperty(reported_from, airport);
+        model.add(root, reported_from, airport);
 
         /*
          * extract date
@@ -115,8 +207,8 @@ public class LAX_Converter {
         Resource arrival = model.createResource(homepage+"Arrival");
         Resource departure = model.createResource(homepage+"Departure");
         Property has_direction = model.createProperty(homepage+"hasDirection");
-        //has_direction.(RDFS.domain, flights);
-        //has_direction.addProperty(RDFS.range,RDFS.Class);
+        //has_direction.addProperty(RDFS.domain, flights);
+        //has_direction.addProperty(RDFS.range,RDFS.);
         arrival.addProperty(RDFS.subClassOf, direction);
         departure.addProperty(RDFS.subClassOf, direction);
         if(row_data[2].equals("Arrival")){
@@ -131,7 +223,7 @@ public class LAX_Converter {
         Resource travel_type = model.createResource(homepage+"TravelType");
         Property has_travel_type = model.createProperty(homepage+"hasTravelType");
         Resource domestic = model.createResource(homepage+"Domestic");
-        Property international = model.createProperty(homepage+"International");
+        Resource international = model.createProperty(homepage+"International");
         domestic.addProperty(RDFS.subClassOf, travel_type);
         international.addProperty(RDFS.subClassOf, travel_type);
         if(row_data[3].equals("Domestic")){
@@ -167,10 +259,11 @@ public class LAX_Converter {
          */
         Literal pass_count = model.createTypedLiteral(Integer.valueOf(row_data[5]));
         Property counted_pass = model.createProperty(homepage+"countedPassenger");
-        root.addLiteral(counted_pass, pass_count);
-
-        root.addProperty( reports_on, flights );
-        //model.add(root);
+        //root.addLiteral(counted_pass, pass_count);
+        model.add(root, counted_pass, pass_count);
+        
+        //root.addProperty( reports_on, flights );
+        model.add(root, reports_on, flights);
     }
 
 
