@@ -17,6 +17,8 @@ public class App
         COVID_Converter new_covid = new COVID_Converter("dataset/LA_County_COVID_Cases.csv");
         LAX_Converter new_laxa = new LAX_Converter("dataset/Los_Angeles_International_Airport_Passenger_Count_By_Carrier_Type.csv");
         //new_laxa.csv_to_rdf();
+
+        new_covid.csv_to_rdf();
         
         
     }

@@ -55,7 +55,7 @@ public class LAX_Converter {
             String data = br.readLine(); //first row of data
 
             int i = 0;
-            while(data != null && i<5){ 
+            while(data != null && i<1){ 
                 
                 String[] row_data = data.split(","); 
                 create_resource(row_data, rdf, i);
@@ -198,6 +198,7 @@ public class LAX_Converter {
         extract.addProperty(RDFS.subClassOf, date_time);
         extracted_date.addProperty(RDFS.subClassOf, date_time);
         //extracted_date.addProperty(RDFS.domain, root);
+        extracted_date.addProperty(RDFS.range, date_time);
         model.add(root, extracted_date, row_data[0]);
         
         /*
