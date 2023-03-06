@@ -6,7 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.naming.spi.ResolveResult;
 
@@ -61,15 +67,6 @@ public class LAX_Converter {
                 String[] row_data = data.split(","); 
                 create_resource(row_data, rdf, i);
 
-               /*  
-                Resource root = rdf.createResource(ds +"row-"+ String.valueOf(i+1));
-
-                for(int j = 0; j < row_data.length; j++){
-                    Property p = rdf.createProperty(ds+col[j]);
-                    Literal o = rdf.createLiteral(row_data[j]);
-                    rdf.add(root, p, o);
-                }
-                */
                 
                 //get next line
                 data = br.readLine();
@@ -134,7 +131,7 @@ public class LAX_Converter {
         reportedFrom.addProperty(RDFS.range, airport);
         Property countedPassengers = schema.createProperty(homepage+"countedPassengers");
         countedPassengers.addProperty(RDFS.domain, flightReport);
-        //countedPassengers.addProperty(RDFS.range, );
+        countedPassengers.addProperty(RDFS.range, XSD.integer);
         Property reportsOn = schema.createProperty(homepage+"reportsOn");
         reportsOn.addProperty(RDFS.domain, flightReport);
         reportsOn.addProperty(RDFS.range, flights);
@@ -155,7 +152,10 @@ public class LAX_Converter {
         hasDirection.addProperty(RDFS.range, direction);
         Property hasReportID = schema.createProperty(homepage+"hasReportID");
         hasReportID.addProperty(RDFS.domain, flightReport);
-        //hasReportID.addProperty(RDFS.range, country);
+        hasReportID.addProperty(RDFS.range, XSD.integer);
+        Property hasDateTime = schema.createProperty(homepage+"hasDateTime");
+        hasDateTime.addProperty(RDFS.domain, dateTime);
+        hasDateTime.addProperty(RDFS.range, XSD.dateTime);
 
         // Associate Classes with Properties
 
@@ -183,15 +183,74 @@ public class LAX_Converter {
         /*
          * extract date
          */
-        Resource date_time = model.createResource(homepage+"DateTime");
-        Resource extract = model.createResource(homepage+"ExtractDate");
+        //Resource date_time = model.createResource(homepage+"DateTime");
+        Resource extract = model.createResource();
         Property extracted_date = model.createProperty(homepage+"extractedDate");
+        String dateTimeCSV = row_data[0].replace("/", "-");
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
+        try {
+            Date date = df.parse(dateTimeCSV);
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(date);
+            XSDDateTime dateTimeXSD = new XSDDateTime(cal);
+            Literal extractedLiteral = model.createTypedLiteral(dateTimeXSD);
+            Property hasDateTime = model.createProperty(homepage+"hasDateTime");
+            extract.addLiteral(hasDateTime, extractedLiteral); 
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        model.add(root, extracted_date, extract);
+        
+        /* 
+        String date = dateTimeCSV[0];
+        String unformattedTime = dateTimeCSV[1];
+        String hour = unformattedTime.substring(0, 2);
+        Integer intHour = Integer.valueOf(hour);
+        if (dateTimeCSV[2].equals("PM")){
+            String formattedTime;
+            if(intHour < 12){
+                Integer newHour = intHour + 12;
+                formattedTime = newHour.toString() + unformattedTime.substring(2);
+            } 
+            else {
+                formattedTime = unformattedTime;
+            }
+            XSDDateTime dateTimeXSD = new XSDDateTime(date+"T"+formattedTime, intHour);
+        } else {
+            String formattedTime;
+            if(intHour == 12){
+                Integer newHour = 0;
+                String formattedTime = newHour.toString() + unformattedTime.substring(2);
+            } 
+            else {
+                String formattedTime = unformattedTime;
+            }
+            XSDDateTime dateTimeXSD = date+"T"+formattedTime;
+        }
+        */
+
+        //Sample of dateTimeCSV: 05/03/2021 03:08:02 PM
         
         /*
          * report period
          */
-        Resource report_period = model.createResource(homepage+"ReportPeriod");
+        Resource report_period = model.createResource();
         Property reported_date = model.createProperty(homepage+"reportedDate");
+        String reportdateTimeCSV = row_data[1].replace("/", "-");
+        try {
+            Date date = df.parse(reportdateTimeCSV);
+            Calendar reportcal = new GregorianCalendar();
+            reportcal.setTime(date);
+            XSDDateTime reportdateTimeXSD = new XSDDateTime(reportcal);
+            Literal reportedLiteral = model.createTypedLiteral(reportdateTimeXSD);
+            Property hasDateTime = model.createProperty(homepage+"hasDateTime");
+            report_period.addLiteral(hasDateTime, reportedLiteral); 
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        model.add(root, reported_date, report_period);
 
         /*
          * arrival/departure
