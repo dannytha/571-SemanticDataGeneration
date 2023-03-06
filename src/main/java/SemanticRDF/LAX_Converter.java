@@ -35,7 +35,7 @@ public class LAX_Converter {
 
     private Model rdf;
     private String csv;
-    private String homepage = "https://FlighReport.com/";
+    private String homepage = "https://FlightReport.com/";
 
     //lax constructor
     public LAX_Converter(String loc ){
@@ -44,24 +44,24 @@ public class LAX_Converter {
 
 
     public void csv_to_rdf() throws FileNotFoundException{
-        //Model rdf = ModelFactory.createDefaultModel();
+        Model rdf = ModelFactory.createDefaultModel();
+        rdf.setNsPrefix("fr", homepage);
         Model schema = schemaCreate(); 
-        //File f = new File(csv);
-
-        //rdf.setNsPrefix("fr", homepage);
-/* 
+        schema.setNsPrefix("fr", homepage);
+        rdf.add(schema);
+        File f = new File(csv);
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String[] col = br.readLine().split(","); //column names
             String data = br.readLine(); //first row of data
 
             int i = 0;
-            while(data != null && i<5){ 
+            while(data != null){ 
                 
                 String[] row_data = data.split(","); 
                 create_resource(row_data, rdf, i);
 
-                
+               /*  
                 Resource root = rdf.createResource(ds +"row-"+ String.valueOf(i+1));
 
                 for(int j = 0; j < row_data.length; j++){
@@ -69,6 +69,7 @@ public class LAX_Converter {
                     Literal o = rdf.createLiteral(row_data[j]);
                     rdf.add(root, p, o);
                 }
+                */
                 
                 //get next line
                 data = br.readLine();
@@ -81,10 +82,10 @@ public class LAX_Converter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-*/
+
         //rdf.write(System.out);
         //rdf_model = rdf;
-        output_to_file(schema);
+        output_to_file(rdf);
     }
 
     public Model schemaCreate(){
@@ -161,15 +162,14 @@ public class LAX_Converter {
         return schema;
     }
 
-    
+
     public void create_resource(String[] row_data, Model model, int i){
         /*
          * initialization 
          */
-        Resource root = model.createResource("https://row-number/"+i); //root = flightsreport
-        Resource flight_reports = model.createResource();
-        //flight_reports.addProperty(RDF.type, RDFS.Class);
-        //root.addProperty(RDF.type, flight_reports);
+        Resource root = model.createResource(homepage+"row/"+i); //root = flightsreport
+        Resource flight_reports = model.createResource(homepage+"FlightReport");
+        root.addProperty(RDF.type, flight_reports);
         Resource flights = model.createResource();
 
         Resource country = model.createResource();
@@ -178,7 +178,6 @@ public class LAX_Converter {
         Property reported_from = model.createProperty(homepage+"reportedFrom");
 
         airport.addProperty(located_in, country);
-        //root.addProperty(reported_from, airport);
         model.add(root, reported_from, airport);
 
         /*
@@ -187,14 +186,12 @@ public class LAX_Converter {
         Resource date_time = model.createResource(homepage+"DateTime");
         Resource extract = model.createResource(homepage+"ExtractDate");
         Property extracted_date = model.createProperty(homepage+"extractedDate");
-        extract.addProperty(RDFS.subClassOf, date_time);
         
         /*
          * report period
          */
         Resource report_period = model.createResource(homepage+"ReportPeriod");
         Property reported_date = model.createProperty(homepage+"reportedDate");
-        report_period.addProperty(RDFS.subClassOf, date_time);
 
         /*
          * arrival/departure
@@ -203,10 +200,6 @@ public class LAX_Converter {
         Resource arrival = model.createResource(homepage+"Arrival");
         Resource departure = model.createResource(homepage+"Departure");
         Property has_direction = model.createProperty(homepage+"hasDirection");
-        //has_direction.addProperty(RDFS.domain, flights);
-        //has_direction.addProperty(RDFS.range,RDFS.);
-        arrival.addProperty(RDFS.subClassOf, direction);
-        departure.addProperty(RDFS.subClassOf, direction);
         if(row_data[2].equals("Arrival")){
             flights.addProperty(has_direction, arrival);
         }else{
@@ -220,8 +213,6 @@ public class LAX_Converter {
         Property has_travel_type = model.createProperty(homepage+"hasTravelType");
         Resource domestic = model.createResource(homepage+"Domestic");
         Resource international = model.createProperty(homepage+"International");
-        domestic.addProperty(RDFS.subClassOf, travel_type);
-        international.addProperty(RDFS.subClassOf, travel_type);
         if(row_data[3].equals("Domestic")){
             flights.addProperty(has_travel_type, domestic);
         }else{
@@ -238,9 +229,6 @@ public class LAX_Converter {
         Resource charter = model.createResource(homepage+"Charter");
         Resource scheduled_carrier = model.createResource(homepage+"ScheduledCarrier");
         Resource commuter = model.createResource(homepage+"Commuter");
-        charter.addProperty(RDFS.subClassOf, flight_type);
-        scheduled_carrier.addProperty(RDFS.subClassOf, flight_type);
-        commuter.addProperty(RDFS.subClassOf, flight_type);
 
         if(row_data[4].equals("Charter")){
             flights.addProperty(isof_FlightType, charter);
@@ -254,7 +242,7 @@ public class LAX_Converter {
          * passenger counter
          */
         Literal pass_count = model.createTypedLiteral(Integer.valueOf(row_data[5]));
-        Property counted_pass = model.createProperty(homepage+"countedPassenger");
+        Property counted_pass = model.createProperty(homepage+"countedPassengers");
         //root.addLiteral(counted_pass, pass_count);
         model.add(root, counted_pass, pass_count);
         
