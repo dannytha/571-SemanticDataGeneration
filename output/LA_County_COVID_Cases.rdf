@@ -14,35 +14,123 @@
     <cd:fips>6037</cd:fips>
   </rdfs:Class>
   <rdfs:Class rdf:about="https://COVIDReport.com/Report"/>
+  <rdfs:Class rdf:about="https://COVIDReport.com//Location">
+    <cd:hasA>
+      <rdfs:Class rdf:about="https://COVIDReport.com//State"/>
+    </cd:hasA>
+  </rdfs:Class>
   <rdfs:Class rdf:about="https://COVIDReport.com//State">
     <cd:StateName>California</cd:StateName>
     <cd:hasA rdf:resource="https://COVIDReport.com//County"/>
   </rdfs:Class>
-  <rdfs:Class rdf:about="https://COVIDReport.com//Location">
-    <cd:hasA rdf:resource="https://COVIDReport.com//State"/>
-  </rdfs:Class>
   <rdfs:Class rdf:about="https://COVIDReport.com//CountyCount"/>
-  <owl:ObjectProperty rdf:about="https://COVIDReport.com/isAReport"/>
-  <owl:ObjectProperty rdf:about="https://COVIDReport.com/reportedIn"/>
-  <owl:ObjectProperty rdf:about="https://COVIDReport.com/hasCountyCount"/>
-  <owl:ObjectProperty rdf:about="https://COVIDReport.com/hasStateCount"/>
-  <owl:ObjectProperty rdf:about="https://COVIDReport.com/hasA"/>
-  <owl:ObjectProperty rdf:about="https://COVIDReport.com/hasDate"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/CountyCaseCount"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/Lon"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/CountyName"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/StateName"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/NewStateDeathCount"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/NewCountyCaseCount"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/Date"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/StateDeathCount"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/Lat"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/CountyDeathCount"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/NewStateCaseCount"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/StateCaseCount"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/NewCountyDeathCount"/>
-  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/fips"/>
-  <cd:Report rdf:about="https://COVIDReport.com/row-number/2">
+  <owl:ObjectProperty rdf:about="https://COVIDReport.com/reportedIn">
+    <rdfs:range rdf:resource="https://COVIDReport.com//Location"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com/Report"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://COVIDReport.com/hasCountyCount">
+    <rdfs:range rdf:resource="https://COVIDReport.com//CountyCount"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com/Report"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://COVIDReport.com/hasStateCount">
+    <rdfs:range rdf:resource="https://COVIDReport.com//StateCount"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com/Report"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://COVIDReport.com/hasA">
+    <rdfs:range rdf:resource="https://COVIDReport.com//County"/>
+    <rdfs:range rdf:resource="https://COVIDReport.com//State"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//State"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//Location"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://COVIDReport.com/hasDate">
+    <rdfs:range>
+      <rdf:Description rdf:about="https://COVIDReport.com//ExtractionDate">
+        <rdfs:subClassOf rdf:resource="https://COVIDReport.com/DateTime"/>
+      </rdf:Description>
+    </rdfs:range>
+    <rdfs:domain rdf:resource="https://COVIDReport.com/Report"/>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/CountyCaseCount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//CountyCount"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/Lon">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//County"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/CountyName">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//County"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/StateName">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//County"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/NewStateDeathCount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//StateCount"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/NewCountyCaseCount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//CountyCount"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/Date">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//ExtractionDate"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/StateDeathCount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//StateCount"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/Lat">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//County"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/CountyDeathCount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//CountyCount"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/NewStateCaseCount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//StateCount"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/StateCaseCount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//StateCount"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/NewCountyDeathCount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//CountyCount"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://COVIDReport.com/fips">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://COVIDReport.com//County"/>
+  </owl:DatatypeProperty>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-6">
+    <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
+    <cd:hasDate>
+      <j.0:ExtractionDate>
+        <cd:Date>09/03/2021 12:00:00 AM</cd:Date>
+      </j.0:ExtractionDate>
+    </cd:hasDate>
+    <cd:hasStateCount>
+      <j.0:StateCount>
+        <cd:NewStateDeathCount>48</cd:NewStateDeathCount>
+        <cd:NewStateCaseCount>11581</cd:NewStateCaseCount>
+        <cd:StateDeathCount>66540</cd:StateDeathCount>
+        <cd:StateCaseCount>4435277</cd:StateCaseCount>
+      </j.0:StateCount>
+    </cd:hasStateCount>
+    <cd:hasCountyCount>
+      <j.0:CountyCount>
+        <cd:NewCountyDeathCount>12</cd:NewCountyDeathCount>
+        <cd:NewCountyCaseCount>1056</cd:NewCountyCaseCount>
+        <cd:CountyDeathCount>25477</cd:CountyDeathCount>
+        <cd:CountyCaseCount>1421616</cd:CountyCaseCount>
+      </j.0:CountyCount>
+    </cd:hasCountyCount>
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-2">
     <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
     <cd:hasDate>
       <j.0:ExtractionDate>
@@ -65,36 +153,56 @@
         <cd:CountyCaseCount>1414854</cd:CountyCaseCount>
       </j.0:CountyCount>
     </cd:hasCountyCount>
-    <cd:isAReport rdf:resource="https://COVIDReport.com/Report"/>
-    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
-  </cd:Report>
-  <cd:Report rdf:about="https://COVIDReport.com/row-number/0">
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-5">
     <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
     <cd:hasDate>
       <j.0:ExtractionDate>
-        <cd:Date>08/27/2021 12:00:00 AM</cd:Date>
+        <cd:Date>09/02/2021 12:00:00 AM</cd:Date>
       </j.0:ExtractionDate>
     </cd:hasDate>
     <cd:hasStateCount>
       <j.0:StateCount>
-        <cd:NewStateDeathCount>59</cd:NewStateDeathCount>
-        <cd:NewStateCaseCount>14660</cd:NewStateCaseCount>
-        <cd:StateDeathCount>65873</cd:StateDeathCount>
-        <cd:StateCaseCount>4360789</cd:StateCaseCount>
+        <cd:NewStateDeathCount>0</cd:NewStateDeathCount>
+        <cd:NewStateCaseCount>0</cd:NewStateCaseCount>
+        <cd:StateDeathCount>66470</cd:StateDeathCount>
+        <cd:StateCaseCount>4418368</cd:StateCaseCount>
       </j.0:StateCount>
     </cd:hasStateCount>
     <cd:hasCountyCount>
       <j.0:CountyCount>
-        <cd:NewCountyDeathCount>21</cd:NewCountyDeathCount>
-        <cd:NewCountyCaseCount>1930</cd:NewCountyCaseCount>
-        <cd:CountyDeathCount>25284</cd:CountyDeathCount>
-        <cd:CountyCaseCount>1407317</cd:CountyCaseCount>
+        <cd:NewCountyDeathCount>0</cd:NewCountyDeathCount>
+        <cd:NewCountyCaseCount>0</cd:NewCountyCaseCount>
+        <cd:CountyDeathCount>25454</cd:CountyDeathCount>
+        <cd:CountyCaseCount>1419030</cd:CountyCaseCount>
       </j.0:CountyCount>
     </cd:hasCountyCount>
-    <cd:isAReport rdf:resource="https://COVIDReport.com/Report"/>
-    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
-  </cd:Report>
-  <cd:Report rdf:about="https://COVIDReport.com/row-number/1">
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-9">
+    <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
+    <cd:hasDate>
+      <j.0:ExtractionDate>
+        <cd:Date>09/06/2021 12:00:00 AM</cd:Date>
+      </j.0:ExtractionDate>
+    </cd:hasDate>
+    <cd:hasStateCount>
+      <j.0:StateCount>
+        <cd:NewStateDeathCount>0</cd:NewStateDeathCount>
+        <cd:NewStateCaseCount>0</cd:NewStateCaseCount>
+        <cd:StateDeathCount>66791</cd:StateDeathCount>
+        <cd:StateCaseCount>4451347</cd:StateCaseCount>
+      </j.0:StateCount>
+    </cd:hasStateCount>
+    <cd:hasCountyCount>
+      <j.0:CountyCount>
+        <cd:NewCountyDeathCount>0</cd:NewCountyDeathCount>
+        <cd:NewCountyCaseCount>0</cd:NewCountyCaseCount>
+        <cd:CountyDeathCount>25533</cd:CountyDeathCount>
+        <cd:CountyCaseCount>1423620</cd:CountyCaseCount>
+      </j.0:CountyCount>
+    </cd:hasCountyCount>
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-1">
     <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
     <cd:hasDate>
       <j.0:ExtractionDate>
@@ -117,10 +225,128 @@
         <cd:CountyCaseCount>1407317</cd:CountyCaseCount>
       </j.0:CountyCount>
     </cd:hasCountyCount>
-    <cd:isAReport rdf:resource="https://COVIDReport.com/Report"/>
-    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
-  </cd:Report>
-  <rdf:Description rdf:about="https://COVIDReport.com//ExtractionDate">
-    <rdfs:subClassOf rdf:resource="https://COVIDReport.com/DateTime"/>
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-4">
+    <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
+    <cd:hasDate>
+      <j.0:ExtractionDate>
+        <cd:Date>09/01/2021 12:00:00 AM</cd:Date>
+      </j.0:ExtractionDate>
+    </cd:hasDate>
+    <cd:hasStateCount>
+      <j.0:StateCount>
+        <cd:NewStateDeathCount>87</cd:NewStateDeathCount>
+        <cd:NewStateCaseCount>6798</cd:NewStateCaseCount>
+        <cd:StateDeathCount>66470</cd:StateDeathCount>
+        <cd:StateCaseCount>4418368</cd:StateCaseCount>
+      </j.0:StateCount>
+    </cd:hasStateCount>
+    <cd:hasCountyCount>
+      <j.0:CountyCount>
+        <cd:NewCountyDeathCount>20</cd:NewCountyDeathCount>
+        <cd:NewCountyCaseCount>2111</cd:NewCountyCaseCount>
+        <cd:CountyDeathCount>25454</cd:CountyDeathCount>
+        <cd:CountyCaseCount>1419030</cd:CountyCaseCount>
+      </j.0:CountyCount>
+    </cd:hasCountyCount>
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-8">
+    <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
+    <cd:hasDate>
+      <j.0:ExtractionDate>
+        <cd:Date>09/05/2021 12:00:00 AM</cd:Date>
+      </j.0:ExtractionDate>
+    </cd:hasDate>
+    <cd:hasStateCount>
+      <j.0:StateCount>
+        <cd:NewStateDeathCount>140</cd:NewStateDeathCount>
+        <cd:NewStateCaseCount>5485</cd:NewStateCaseCount>
+        <cd:StateDeathCount>66791</cd:StateDeathCount>
+        <cd:StateCaseCount>4451347</cd:StateCaseCount>
+      </j.0:StateCount>
+    </cd:hasStateCount>
+    <cd:hasCountyCount>
+      <j.0:CountyCount>
+        <cd:NewCountyDeathCount>19</cd:NewCountyDeathCount>
+        <cd:NewCountyCaseCount>0</cd:NewCountyCaseCount>
+        <cd:CountyDeathCount>25533</cd:CountyDeathCount>
+        <cd:CountyCaseCount>1423620</cd:CountyCaseCount>
+      </j.0:CountyCount>
+    </cd:hasCountyCount>
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-0">
+    <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
+    <cd:hasDate>
+      <j.0:ExtractionDate>
+        <cd:Date>08/27/2021 12:00:00 AM</cd:Date>
+      </j.0:ExtractionDate>
+    </cd:hasDate>
+    <cd:hasStateCount>
+      <j.0:StateCount>
+        <cd:NewStateDeathCount>59</cd:NewStateDeathCount>
+        <cd:NewStateCaseCount>14660</cd:NewStateCaseCount>
+        <cd:StateDeathCount>65873</cd:StateDeathCount>
+        <cd:StateCaseCount>4360789</cd:StateCaseCount>
+      </j.0:StateCount>
+    </cd:hasStateCount>
+    <cd:hasCountyCount>
+      <j.0:CountyCount>
+        <cd:NewCountyDeathCount>21</cd:NewCountyDeathCount>
+        <cd:NewCountyCaseCount>1930</cd:NewCountyCaseCount>
+        <cd:CountyDeathCount>25284</cd:CountyDeathCount>
+        <cd:CountyCaseCount>1407317</cd:CountyCaseCount>
+      </j.0:CountyCount>
+    </cd:hasCountyCount>
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-7">
+    <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
+    <cd:hasDate>
+      <j.0:ExtractionDate>
+        <cd:Date>09/04/2021 12:00:00 AM</cd:Date>
+      </j.0:ExtractionDate>
+    </cd:hasDate>
+    <cd:hasStateCount>
+      <j.0:StateCount>
+        <cd:NewStateDeathCount>111</cd:NewStateDeathCount>
+        <cd:NewStateCaseCount>10585</cd:NewStateCaseCount>
+        <cd:StateDeathCount>66651</cd:StateDeathCount>
+        <cd:StateCaseCount>4445862</cd:StateCaseCount>
+      </j.0:StateCount>
+    </cd:hasStateCount>
+    <cd:hasCountyCount>
+      <j.0:CountyCount>
+        <cd:NewCountyDeathCount>37</cd:NewCountyDeathCount>
+        <cd:NewCountyCaseCount>2004</cd:NewCountyCaseCount>
+        <cd:CountyDeathCount>25514</cd:CountyDeathCount>
+        <cd:CountyCaseCount>1423620</cd:CountyCaseCount>
+      </j.0:CountyCount>
+    </cd:hasCountyCount>
+  </cd:CovidReport>
+  <cd:CovidReport rdf:about="https://COVIDReport.com/CovidReport/row-3">
+    <cd:reportedIn rdf:resource="https://COVIDReport.com//Location"/>
+    <cd:hasDate>
+      <j.0:ExtractionDate>
+        <cd:Date>08/31/2021 12:00:00 AM</cd:Date>
+      </j.0:ExtractionDate>
+    </cd:hasDate>
+    <cd:hasStateCount>
+      <j.0:StateCount>
+        <cd:NewStateDeathCount>0</cd:NewStateDeathCount>
+        <cd:NewStateCaseCount>0</cd:NewStateCaseCount>
+        <cd:StateDeathCount>66301</cd:StateDeathCount>
+        <cd:StateCaseCount>4405324</cd:StateCaseCount>
+      </j.0:StateCount>
+    </cd:hasStateCount>
+    <cd:hasCountyCount>
+      <j.0:CountyCount>
+        <cd:NewCountyDeathCount>0</cd:NewCountyDeathCount>
+        <cd:NewCountyCaseCount>0</cd:NewCountyCaseCount>
+        <cd:CountyDeathCount>25401</cd:CountyDeathCount>
+        <cd:CountyCaseCount>1414854</cd:CountyCaseCount>
+      </j.0:CountyCount>
+    </cd:hasCountyCount>
+  </cd:CovidReport>
+  <rdf:Description rdf:about="https://COVIDReport.com/CovidReport">
+    <rdfs:subClassOf rdf:resource="https://COVIDReport.com/Report"/>
   </rdf:Description>
 </rdf:RDF>

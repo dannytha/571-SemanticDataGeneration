@@ -115,7 +115,7 @@ public class COVID_Converter {
         Individual cc_individual = model.createIndividual(county_count);
         Individual sc_individual = model.createIndividual(state_count);
         Individual ed_individual = model.createIndividual(extraction_date);
-        //Individual cr_individual = model.createIndividual(covid_report);
+        Individual cr_individual = model.createIndividual(homepage+"CovidReport/row-"+i, covid_report);
 
         report.addProperty(RDF.type, RDFS.Class);
         county_count.addProperty(RDF.type, RDFS.Class);
@@ -203,10 +203,10 @@ public class COVID_Converter {
         covid_report.addProperty(RDFS.subClassOf, report);
 
         //county info -> county_count
-        covid_report.addProperty(has_county_count, cc_individual);
-        covid_report.addProperty(has_state_count, sc_individual);
-        covid_report.addProperty(has_date, ed_individual);
-        covid_report.addProperty(reported_in, location);
+        cr_individual.addProperty(has_county_count, cc_individual);
+        cr_individual.addProperty(has_state_count, sc_individual);
+        cr_individual.addProperty(has_date, ed_individual);
+        cr_individual.addProperty(reported_in, location);
 
         cc_individual.addLiteral(county_case_count, row_data[6]);
         //model.add(root, county_case_count, row_data[6]);
