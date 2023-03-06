@@ -12,6 +12,7 @@ import javax.naming.spi.ResolveResult;
 
 import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.ontology.DatatypeProperty;
+import org.apache.jena.ontology.ObjectProperty;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
@@ -42,11 +43,11 @@ public class LAX_Converter {
 
 
     public void csv_to_rdf() throws FileNotFoundException{
-        Model rdf = ModelFactory.createDefaultModel();
+        OntModel rdf = ModelFactory.createOntologyModel();
         Model schema = ModelFactory.createDefaultModel();
         File f = new File(csv);
 
-        //rdf.setNsPrefix("fr", homepage);
+        rdf.setNsPrefix("fr", homepage);
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
@@ -166,7 +167,7 @@ public class LAX_Converter {
         return model;
     }
 
-    public void create_resource(String[] row_data, Model model, int i){
+    public void create_resource(String[] row_data, OntModel model, int i){
         /*
          * initialization 
          */
@@ -178,8 +179,8 @@ public class LAX_Converter {
 
         Resource country = model.createResource();
         Resource airport = model.createResource();
-        Property located_in = model.createProperty(homepage+"locatedIn");
-        Property reported_from = model.createProperty(homepage+"reportedFrom");
+        ObjectProperty located_in = model.createObjectProperty(homepage+"locatedIn");
+        ObjectProperty reported_from = model.createObjectProperty(homepage+"reportedFrom");
 
         airport.addProperty(located_in, country);
         //root.addProperty(reported_from, airport);
@@ -189,15 +190,21 @@ public class LAX_Converter {
          * extract date
          */
         Resource date_time = model.createResource(homepage+"DateTime");
+        date_time.addProperty(RDFS.range, XSD.dateTime);
+
+
         Resource extract = model.createResource(homepage+"ExtractDate");
-        Property extracted_date = model.createProperty(homepage+"extractedDate");
+        ObjectProperty extracted_date = model.createObjectProperty(homepage+"extractedDate");
         extract.addProperty(RDFS.subClassOf, date_time);
+        extracted_date.addProperty(RDFS.subClassOf, date_time);
+        //extracted_date.addProperty(RDFS.domain, root);
+        model.add(root, extracted_date, row_data[0]);
         
         /*
          * report period
          */
         Resource report_period = model.createResource(homepage+"ReportPeriod");
-        Property reported_date = model.createProperty(homepage+"reportedDate");
+        ObjectProperty reported_date = model.createObjectProperty(homepage+"reportedDate");
         report_period.addProperty(RDFS.subClassOf, date_time);
 
         /*
@@ -206,7 +213,7 @@ public class LAX_Converter {
         Resource direction = model.createResource(homepage+"Direction");
         Resource arrival = model.createResource(homepage+"Arrival");
         Resource departure = model.createResource(homepage+"Departure");
-        Property has_direction = model.createProperty(homepage+"hasDirection");
+        ObjectProperty has_direction = model.createObjectProperty(homepage+"hasDirection");
         //has_direction.addProperty(RDFS.domain, flights);
         //has_direction.addProperty(RDFS.range,RDFS.);
         arrival.addProperty(RDFS.subClassOf, direction);
@@ -221,7 +228,7 @@ public class LAX_Converter {
          * domestic/international
          */
         Resource travel_type = model.createResource(homepage+"TravelType");
-        Property has_travel_type = model.createProperty(homepage+"hasTravelType");
+        ObjectProperty has_travel_type = model.createObjectProperty(homepage+"hasTravelType");
         Resource domestic = model.createResource(homepage+"Domestic");
         Resource international = model.createProperty(homepage+"International");
         domestic.addProperty(RDFS.subClassOf, travel_type);
@@ -232,13 +239,13 @@ public class LAX_Converter {
             flights.addProperty(has_travel_type, international);
         }
 
-        Property reports_on = model.createProperty(homepage+"reportsOn");
+        ObjectProperty reports_on = model.createObjectProperty(homepage+"reportsOn");
 
         /*
          * flight type
          */
         Resource flight_type = model.createResource(homepage+"FlightType");
-        Property isof_FlightType = model.createProperty(homepage+"isOfFlightType");
+        ObjectProperty isof_FlightType = model.createObjectProperty(homepage+"isOfFlightType");
         Resource charter = model.createResource(homepage+"Charter");
         Resource scheduled_carrier = model.createResource(homepage+"ScheduledCarrier");
         Resource commuter = model.createResource(homepage+"Commuter");
@@ -258,7 +265,7 @@ public class LAX_Converter {
          * passenger counter
          */
         Literal pass_count = model.createTypedLiteral(Integer.valueOf(row_data[5]));
-        Property counted_pass = model.createProperty(homepage+"countedPassenger");
+        DatatypeProperty counted_pass = model.createDatatypeProperty(homepage+"countedPassenger");
         //root.addLiteral(counted_pass, pass_count);
         model.add(root, counted_pass, pass_count);
         
