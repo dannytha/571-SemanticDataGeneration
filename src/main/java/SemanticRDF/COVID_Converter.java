@@ -98,7 +98,7 @@ public class COVID_Converter {
         /*
          * initialization 
          */
-        Resource covid_report = model.createResource(homepage+"row-number/"+i);
+        Resource covid_report = model.createResource(homepage+"CovidReport");
 
         Resource report = model.createResource(homepage+"Report");
         Resource extraction_date = model.createResource(homepage+"/ExtractionDate");
@@ -115,6 +115,7 @@ public class COVID_Converter {
         Individual cc_individual = model.createIndividual(county_count);
         Individual sc_individual = model.createIndividual(state_count);
         Individual ed_individual = model.createIndividual(extraction_date);
+        //Individual cr_individual = model.createIndividual(covid_report);
 
         report.addProperty(RDF.type, RDFS.Class);
         county_count.addProperty(RDF.type, RDFS.Class);
@@ -123,8 +124,8 @@ public class COVID_Converter {
         state.addProperty(RDF.type, RDFS.Class);
         county.addProperty(RDF.type, RDFS.Class);
 
-        covid_report.addProperty(RDF.type, RDFS.Class);
-        covid_report.addProperty(RDF.type, report);
+        //covid_report.addProperty(RDF.type, RDFS.Class);
+        //covid_report.addProperty(RDF.type, report);
 
         ObjectProperty has_date = model.createObjectProperty(homepage+"hasDate");
         ObjectProperty reported_in = model.createObjectProperty(homepage+"reportedIn");
@@ -199,7 +200,7 @@ public class COVID_Converter {
         has_county_count.addProperty(RDFS.range, county_count);
         has_state_count.addProperty(RDFS.range, state_count);
 
-        report.addProperty(RDFS.subClassOf, covid_report);
+        covid_report.addProperty(RDFS.subClassOf, report);
 
         //county info -> county_count
         covid_report.addProperty(has_county_count, cc_individual);
