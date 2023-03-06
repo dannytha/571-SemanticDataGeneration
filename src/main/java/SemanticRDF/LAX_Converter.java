@@ -170,6 +170,9 @@ public class LAX_Converter {
         String rowReference = homepage+"row/"+i;
         Resource root = model.createResource(rowReference); //root = flightsreport
         Resource flight_reports = model.createResource(homepage+"FlightReport");
+        Property reportIDProp = model.getProperty(homepage+"hasReportID");
+        Literal reportID = model.createLiteral("FRID"+i);
+        model.add(root, reportIDProp, reportID);
         root.addProperty(RDF.type, flight_reports);
         Resource flights = model.createResource(rowReference+"/flights");
 
