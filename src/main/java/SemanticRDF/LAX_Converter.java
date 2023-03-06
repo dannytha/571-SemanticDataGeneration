@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.naming.spi.ResolveResult;
 
+import org.apache.jena.ontology.DatatypeProperty;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -38,7 +39,7 @@ public class LAX_Converter {
 
 
     public void csv_to_rdf() throws FileNotFoundException{
-        rdf = ModelFactory.createDefaultModel();
+        Model rdf = ModelFactory.createDefaultModel();
         File f = new File(csv);
 
         try {
@@ -73,9 +74,9 @@ public class LAX_Converter {
             e.printStackTrace();
         }
 
-        rdf.write(System.out);
+        //rdf.write(System.out);
         //rdf_model = rdf;
-        //output_to_file(rdf_model);
+        output_to_file(rdf);
     }
     public void create_resource(String[] row_data, Model model, int i){
         /*
@@ -96,24 +97,26 @@ public class LAX_Converter {
          * extract date
          */
         Resource date_time = model.createResource(homepage+"DateTime");
-        Resource extract = model.createResource(homepage+"extract");
+        Resource extract = model.createResource(homepage+"ExtractDate");
         Property extracted_date = model.createProperty(homepage+"extractedDate");
         extract.addProperty(RDFS.subClassOf, date_time);
-
+        
         /*
          * report period
          */
-        Resource report_period = model.createResource(homepage+"reportperiod");
+        Resource report_period = model.createResource(homepage+"ReportPeriod");
         Property reported_date = model.createProperty(homepage+"reportedDate");
         report_period.addProperty(RDFS.subClassOf, date_time);
 
         /*
          * arrival/departure
          */
-        Resource direction = model.createResource(homepage+"direction");
+        Resource direction = model.createResource(homepage+"Direction");
         Resource arrival = model.createResource(homepage+"Arrival");
         Resource departure = model.createResource(homepage+"Departure");
         Property has_direction = model.createProperty(homepage+"hasDirection");
+        //has_direction.(RDFS.domain, flights);
+        //has_direction.addProperty(RDFS.range,RDFS.Class);
         arrival.addProperty(RDFS.subClassOf, direction);
         departure.addProperty(RDFS.subClassOf, direction);
         if(row_data[2].equals("Arrival")){
@@ -125,7 +128,7 @@ public class LAX_Converter {
         /*
          * domestic/international
          */
-        Resource travel_type = model.createResource(homepage+"travel_type");
+        Resource travel_type = model.createResource(homepage+"TravelType");
         Property has_travel_type = model.createProperty(homepage+"hasTravelType");
         Resource domestic = model.createResource(homepage+"Domestic");
         Property international = model.createProperty(homepage+"International");
@@ -142,7 +145,7 @@ public class LAX_Converter {
         /*
          * flight type
          */
-        Resource flight_type = model.createResource(homepage+"flight_type");
+        Resource flight_type = model.createResource(homepage+"FlightType");
         Property isof_FlightType = model.createProperty(homepage+"isOfFlightType");
         Resource charter = model.createResource(homepage+"Charter");
         Resource scheduled_carrier = model.createResource(homepage+"ScheduledCarrier");
