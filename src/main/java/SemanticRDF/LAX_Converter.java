@@ -167,13 +167,14 @@ public class LAX_Converter {
         /*
          * initialization 
          */
-        Resource root = model.createResource(homepage+"row/"+i); //root = flightsreport
+        String rowReference = homepage+"row/"+i;
+        Resource root = model.createResource(rowReference); //root = flightsreport
         Resource flight_reports = model.createResource(homepage+"FlightReport");
         root.addProperty(RDF.type, flight_reports);
-        Resource flights = model.createResource();
+        Resource flights = model.createResource(rowReference+"/flights");
 
-        Resource country = model.createResource();
-        Resource airport = model.createResource();
+        Resource country = model.createResource("https://countries.gov/UnitedStates");
+        Resource airport = model.createResource("https://flylax.com/");
         Property located_in = model.createProperty(homepage+"locatedIn");
         Property reported_from = model.createProperty(homepage+"reportedFrom");
 
@@ -184,7 +185,7 @@ public class LAX_Converter {
          * extract date
          */
         //Resource date_time = model.createResource(homepage+"DateTime");
-        Resource extract = model.createResource();
+        Resource extract = model.createResource(rowReference+"/extractDate");
         Property extracted_date = model.createProperty(homepage+"extractedDate");
         String dateTimeCSV = row_data[0].replace("/", "-");
         DateFormat df = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
@@ -201,41 +202,13 @@ public class LAX_Converter {
             e.printStackTrace();
         }
         model.add(root, extracted_date, extract);
-        
-        /* 
-        String date = dateTimeCSV[0];
-        String unformattedTime = dateTimeCSV[1];
-        String hour = unformattedTime.substring(0, 2);
-        Integer intHour = Integer.valueOf(hour);
-        if (dateTimeCSV[2].equals("PM")){
-            String formattedTime;
-            if(intHour < 12){
-                Integer newHour = intHour + 12;
-                formattedTime = newHour.toString() + unformattedTime.substring(2);
-            } 
-            else {
-                formattedTime = unformattedTime;
-            }
-            XSDDateTime dateTimeXSD = new XSDDateTime(date+"T"+formattedTime, intHour);
-        } else {
-            String formattedTime;
-            if(intHour == 12){
-                Integer newHour = 0;
-                String formattedTime = newHour.toString() + unformattedTime.substring(2);
-            } 
-            else {
-                String formattedTime = unformattedTime;
-            }
-            XSDDateTime dateTimeXSD = date+"T"+formattedTime;
-        }
-        */
 
         //Sample of dateTimeCSV: 05/03/2021 03:08:02 PM
         
         /*
          * report period
          */
-        Resource report_period = model.createResource();
+        Resource report_period = model.createResource(rowReference+"/reportPeriod");
         Property reported_date = model.createProperty(homepage+"reportedDate");
         String reportdateTimeCSV = row_data[1].replace("/", "-");
         try {
