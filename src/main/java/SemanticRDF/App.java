@@ -19,6 +19,7 @@ public class App
         //new_laxa.csv_to_rdf();
 
         new_covid.csv_to_rdf();
+        new_laxa.csv_to_rdf();
         
         
     }

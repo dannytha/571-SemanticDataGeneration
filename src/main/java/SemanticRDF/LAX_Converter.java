@@ -246,7 +246,7 @@ public class LAX_Converter {
          * domestic/international
          */
         Resource travel_type = model.createResource(homepage+"TravelType");
-        ObjectProperty has_travel_type = model.createObjectProperty(homepage+"hasTravelType");
+        Property has_travel_type = model.createProperty(homepage+"hasTravelType");
         Resource domestic = model.createResource(homepage+"Domestic");
         Resource international = model.createProperty(homepage+"International");
         if(row_data[3].equals("Domestic")){
@@ -255,13 +255,13 @@ public class LAX_Converter {
             flights.addProperty(has_travel_type, international);
         }
 
-        ObjectProperty reports_on = model.createObjectProperty(homepage+"reportsOn");
+        Property reports_on = model.createProperty(homepage+"reportsOn");
 
         /*
          * flight type
          */
         Resource flight_type = model.createResource(homepage+"FlightType");
-        ObjectProperty isof_FlightType = model.createObjectProperty(homepage+"isOfFlightType");
+        Property isof_FlightType = model.createProperty(homepage+"isOfFlightType");
         Resource charter = model.createResource(homepage+"Charter");
         Resource scheduled_carrier = model.createResource(homepage+"ScheduledCarrier");
         Resource commuter = model.createResource(homepage+"Commuter");
