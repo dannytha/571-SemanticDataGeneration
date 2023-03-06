@@ -6,7 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.naming.ldap.HasControls;
 import javax.naming.spi.ResolveResult;
@@ -83,7 +88,7 @@ public class COVID_Converter {
             e.printStackTrace();
         }
 
-        rdf.write(System.out);
+        //rdf.write(System.out);
         //rdf_model = rdf;
         output_to_file(rdf);
     }
@@ -184,8 +189,8 @@ public class COVID_Converter {
         state_name.addProperty(RDFS.domain, county);
         county_name.addProperty(RDFS.domain, county);
         date.addProperty(RDFS.domain, extraction_date);
-        lon.addProperty(RDFS.range, XSD.decimal);
-        lat.addProperty(RDFS.range, XSD.decimal);
+        lon.addProperty(RDFS.range, XSD.xstring);
+        lat.addProperty(RDFS.range, XSD.xstring);
         fips.addProperty(RDFS.range, XSD.integer);
         state_name.addProperty(RDFS.range, XSD.xstring);
         county_name.addProperty(RDFS.range, XSD.xstring);
@@ -208,29 +213,40 @@ public class COVID_Converter {
         cr_individual.addProperty(has_date, ed_individual);
         cr_individual.addProperty(reported_in, location);
 
-        cc_individual.addLiteral(county_case_count, row_data[6]);
+        cc_individual.addLiteral(county_case_count, Integer.valueOf(row_data[6]));
         //model.add(root, county_case_count, row_data[6]);
-        cc_individual.addLiteral(county_death_count, row_data[7]);
-        cc_individual.addLiteral(new_county_case_count, row_data[11]);
-        cc_individual.addLiteral(new_county_death_count, row_data[12]);
+        cc_individual.addLiteral(county_death_count, Integer.valueOf(row_data[7]));
+        cc_individual.addLiteral(new_county_case_count, Integer.valueOf(row_data[11]));
+        cc_individual.addLiteral(new_county_death_count, Integer.valueOf(row_data[12]));
 
-        sc_individual.addProperty(state_case_count, row_data[9]);
-        sc_individual.addProperty(state_death_count, row_data[10]);
-        sc_individual.addProperty(new_state_case_count, row_data[13]);
-        sc_individual.addProperty(new_state_death_count, row_data[14]);
+        sc_individual.addLiteral(state_case_count, Integer.valueOf(row_data[9]));
+        sc_individual.addLiteral(state_death_count, Integer.valueOf(row_data[10]));
+        sc_individual.addLiteral(new_state_case_count, Integer.valueOf(row_data[13]));
+        sc_individual.addLiteral(new_state_death_count, Integer.valueOf(row_data[14]));
 
 
         extraction_date.addProperty(RDFS.subClassOf, date_time);
-        ed_individual.addProperty(date, row_data[3]);
-
+        String dateTimeCSV = row_data[3].replace("/", "-");
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
+        try {
+            Date dated = df.parse(dateTimeCSV);
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(dated);
+            XSDDateTime dateTimeXSD = new XSDDateTime(cal);
+            Literal extractedLiteral = model.createTypedLiteral(dateTimeXSD);
+            ed_individual.addLiteral(date, extractedLiteral);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         location.addProperty(has_a, state);
         state.addProperty(has_a, county);
         state.addProperty(state_name, row_data[1]);
         
-        county.addProperty(fips, row_data[2]);
-        county.addProperty(lat, row_data[4]);
-        county.addProperty(lon, row_data[5]);
+        county.addLiteral(fips, Integer.valueOf(row_data[2]));
+        county.addLiteral(lat, row_data[4]);
+        county.addLiteral(lon, row_data[5]);
         county.addProperty(county_name, row_data[0]);
 
         //county -> LA

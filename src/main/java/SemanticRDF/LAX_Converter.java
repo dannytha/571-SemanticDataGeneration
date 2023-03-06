@@ -153,7 +153,7 @@ public class LAX_Converter {
         hasDirection.addProperty(RDFS.range, direction);
         Property hasReportID = schema.createProperty(homepage+"hasReportID");
         hasReportID.addProperty(RDFS.domain, flightReport);
-        hasReportID.addProperty(RDFS.range, XSD.integer);
+        hasReportID.addProperty(RDFS.range, XSD.xstring);
         Property hasDateTime = schema.createProperty(homepage+"hasDateTime");
         hasDateTime.addProperty(RDFS.domain, dateTime);
         hasDateTime.addProperty(RDFS.range, XSD.dateTime);
