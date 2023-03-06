@@ -18,8 +18,10 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NsIterator;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFWriterI;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
@@ -42,12 +44,12 @@ public class LAX_Converter {
 
 
     public void csv_to_rdf() throws FileNotFoundException{
-        Model rdf = ModelFactory.createDefaultModel();
-        Model schema = ModelFactory.createDefaultModel();
-        File f = new File(csv);
+        //Model rdf = ModelFactory.createDefaultModel();
+        Model schema = schemaCreate(); 
+        //File f = new File(csv);
 
         //rdf.setNsPrefix("fr", homepage);
-
+/* 
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String[] col = br.readLine().split(","); //column names
@@ -59,7 +61,7 @@ public class LAX_Converter {
                 String[] row_data = data.split(","); 
                 create_resource(row_data, rdf, i);
 
-                /*
+                
                 Resource root = rdf.createResource(ds +"row-"+ String.valueOf(i+1));
 
                 for(int j = 0; j < row_data.length; j++){
@@ -67,7 +69,7 @@ public class LAX_Converter {
                     Literal o = rdf.createLiteral(row_data[j]);
                     rdf.add(root, p, o);
                 }
-                */
+                
                 //get next line
                 data = br.readLine();
                 i++;
@@ -79,11 +81,86 @@ public class LAX_Converter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        rdf.write(System.out);
+*/
+        //rdf.write(System.out);
         //rdf_model = rdf;
-        output_to_file(rdf);
+        output_to_file(schema);
     }
+
+    public Model schemaCreate(){
+        Model schema = ModelFactory.createDefaultModel();
+
+        Resource flightReport = schema.createResource(homepage+"FlightReport");
+        flightReport.addProperty(RDF.type,RDFS.Class);
+        Resource airport = schema.createResource(homepage+"Airport");
+        airport.addProperty(RDF.type,RDFS.Class);
+        Resource country = schema.createResource(homepage+"Country");
+        country.addProperty(RDF.type,RDFS.Class);
+        Resource flights = schema.createResource(homepage+"Flights");
+        flights.addProperty(RDF.type,RDFS.Class);
+        Resource flightType = schema.createResource(homepage+"FlightType");
+        flightType.addProperty(RDF.type,RDFS.Class);
+        Resource charter = schema.createResource(homepage+"Charter");
+        charter.addProperty(RDFS.subClassOf,flightType);
+        Resource scheduledCarrier = schema.createResource(homepage+"ScheduledCarrier");
+        scheduledCarrier.addProperty(RDFS.subClassOf,flightType);
+        Resource commuter = schema.createResource(homepage+"Commuter");
+        commuter.addProperty(RDFS.subClassOf,flightType);
+        Resource direction = schema.createResource(homepage+"Direction");
+        direction.addProperty(RDF.type,RDFS.Class);
+        Resource departure = schema.createResource(homepage+"Departure");
+        departure.addProperty(RDFS.subClassOf,direction);
+        Resource arrival = schema.createResource(homepage+"Arrival");
+        arrival.addProperty(RDFS.subClassOf,direction);
+        Resource travelType = schema.createResource(homepage+"TravelType");
+        travelType.addProperty(RDF.type,RDFS.Class);
+        Resource international = schema.createResource(homepage+"International");
+        international.addProperty(RDFS.subClassOf,travelType);
+        Resource domestic = schema.createResource(homepage+"Domestic");
+        domestic.addProperty(RDFS.subClassOf,travelType);
+        Resource dateTime = schema.createResource(homepage+"DateTime");
+        dateTime.addProperty(RDF.type,RDFS.Class);
+        Resource extractionDate = schema.createResource(homepage+"ExtractionDate");
+        extractionDate.addProperty(RDFS.subClassOf,dateTime);
+        Resource reportPeriod = schema.createResource(homepage+"ReportPeriod");
+        reportPeriod.addProperty(RDFS.subClassOf,dateTime);
+
+        Property locatedIn = schema.createProperty(homepage+"locatedIn");
+        locatedIn.addProperty(RDFS.domain, airport);
+        locatedIn.addProperty(RDFS.range, country);
+        Property reportedFrom = schema.createProperty(homepage+"reportedFrom");
+        reportedFrom.addProperty(RDFS.domain, flightReport);
+        reportedFrom.addProperty(RDFS.range, airport);
+        Property countedPassengers = schema.createProperty(homepage+"countedPassengers");
+        countedPassengers.addProperty(RDFS.domain, flightReport);
+        //countedPassengers.addProperty(RDFS.range, );
+        Property reportsOn = schema.createProperty(homepage+"reportsOn");
+        reportsOn.addProperty(RDFS.domain, flightReport);
+        reportsOn.addProperty(RDFS.range, flights);
+        Property extractedDate = schema.createProperty(homepage+"extractedDate");
+        extractedDate.addProperty(RDFS.domain, flightReport);
+        extractedDate.addProperty(RDFS.range, extractionDate);
+        Property reportedDate = schema.createProperty(homepage+"reportedDate");
+        reportedDate.addProperty(RDFS.domain, flightReport);
+        reportedDate.addProperty(RDFS.range, reportedDate);
+        Property isOfFlightType = schema.createProperty(homepage+"isOfFlightType");
+        isOfFlightType.addProperty(RDFS.domain, flights);
+        isOfFlightType.addProperty(RDFS.range, flightType);
+        Property hasTravelType = schema.createProperty(homepage+"hasTravelType");
+        hasTravelType.addProperty(RDFS.domain, flights);
+        hasTravelType.addProperty(RDFS.range, travelType);
+        Property hasDirection = schema.createProperty(homepage+"hasDirection");
+        hasDirection.addProperty(RDFS.domain, flights);
+        hasDirection.addProperty(RDFS.range, direction);
+        Property hasReportID = schema.createProperty(homepage+"hasReportID");
+        hasReportID.addProperty(RDFS.domain, flightReport);
+        //hasReportID.addProperty(RDFS.range, country);
+
+        // Associate Classes with Properties
+
+        return schema;
+    }
+
     public Model create_schema(){
         Model model = ModelFactory.createDefaultModel();
 
@@ -142,9 +219,6 @@ public class LAX_Converter {
         international.addProperty(RDFS.subClassOf, travel_type);
 
         Property has_travel_type = model.createProperty(homepage+"hasTravelType");
-
-
-
         Resource flight_type = model.createResource(homepage+"FlightType");
         flight_type.addProperty(RDF.type,RDFS.Class);
 
@@ -161,7 +235,6 @@ public class LAX_Converter {
         commuter.addProperty(RDFS.subClassOf, flight_type);
 
         Property isof_FlightType = model.createProperty(homepage+"isOfFlightType");
-
 
         return model;
     }

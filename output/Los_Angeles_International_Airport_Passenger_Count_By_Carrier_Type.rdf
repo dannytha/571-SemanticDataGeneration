@@ -1,103 +1,78 @@
 <rdf:RDF
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:j.0="https://FlighReport.com/"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <rdfs:Class rdf:about="https://FlighReport.com/Country"/>
+  <rdfs:Class rdf:about="https://FlighReport.com/TravelType"/>
+  <rdfs:Class rdf:about="https://FlighReport.com/DateTime"/>
+  <rdfs:Class rdf:about="https://FlighReport.com/FlightType"/>
+  <rdfs:Class rdf:about="https://FlighReport.com/FlightReport"/>
+  <rdfs:Class rdf:about="https://FlighReport.com/Airport"/>
+  <rdfs:Class rdf:about="https://FlighReport.com/Flights"/>
+  <rdfs:Class rdf:about="https://FlighReport.com/Direction"/>
+  <rdf:Description rdf:about="https://FlighReport.com/extractedDate">
+    <rdfs:range>
+      <rdf:Description rdf:about="https://FlighReport.com/ExtractionDate">
+        <rdfs:subClassOf rdf:resource="https://FlighReport.com/DateTime"/>
+      </rdf:Description>
+    </rdfs:range>
+    <rdfs:domain rdf:resource="https://FlighReport.com/FlightReport"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/countedPassengers">
+    <rdfs:domain rdf:resource="https://FlighReport.com/FlightReport"/>
+  </rdf:Description>
   <rdf:Description rdf:about="https://FlighReport.com/ReportPeriod">
     <rdfs:subClassOf rdf:resource="https://FlighReport.com/DateTime"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/International">
+    <rdfs:subClassOf rdf:resource="https://FlighReport.com/TravelType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/Domestic">
+    <rdfs:subClassOf rdf:resource="https://FlighReport.com/TravelType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/hasTravelType">
+    <rdfs:range rdf:resource="https://FlighReport.com/TravelType"/>
+    <rdfs:domain rdf:resource="https://FlighReport.com/Flights"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/Departure">
+    <rdfs:subClassOf rdf:resource="https://FlighReport.com/Direction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/hasDirection">
+    <rdfs:range rdf:resource="https://FlighReport.com/Direction"/>
+    <rdfs:domain rdf:resource="https://FlighReport.com/Flights"/>
   </rdf:Description>
   <rdf:Description rdf:about="https://FlighReport.com/Commuter">
     <rdfs:subClassOf rdf:resource="https://FlighReport.com/FlightType"/>
   </rdf:Description>
-  <rdf:Description rdf:about="https://row-number/2">
-    <j.0:reportsOn rdf:parseType="Resource">
-      <j.0:isOfFlightType>
-        <rdf:Description rdf:about="https://FlighReport.com/Charter">
-          <rdfs:subClassOf rdf:resource="https://FlighReport.com/FlightType"/>
-        </rdf:Description>
-      </j.0:isOfFlightType>
-      <j.0:hasTravelType>
-        <rdf:Description rdf:about="https://FlighReport.com/Domestic">
-          <rdfs:subClassOf rdf:resource="https://FlighReport.com/TravelType"/>
-        </rdf:Description>
-      </j.0:hasTravelType>
-      <j.0:hasDirection>
-        <rdf:Description rdf:about="https://FlighReport.com/Departure">
-          <rdfs:subClassOf rdf:resource="https://FlighReport.com/Direction"/>
-        </rdf:Description>
-      </j.0:hasDirection>
-    </j.0:reportsOn>
-    <j.0:countedPassenger rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
-    >753</j.0:countedPassenger>
-    <j.0:reportedFrom rdf:parseType="Resource">
-      <j.0:locatedIn rdf:parseType="Resource">
-      </j.0:locatedIn>
-    </j.0:reportedFrom>
+  <rdf:Description rdf:about="https://FlighReport.com/hasReportID">
+    <rdfs:domain rdf:resource="https://FlighReport.com/FlightReport"/>
   </rdf:Description>
-  <rdf:Description rdf:about="https://row-number/1">
-    <j.0:reportsOn rdf:parseType="Resource">
-      <j.0:isOfFlightType>
-        <rdf:Description rdf:about="https://FlighReport.com/ScheduledCarrier">
-          <rdfs:subClassOf rdf:resource="https://FlighReport.com/FlightType"/>
-        </rdf:Description>
-      </j.0:isOfFlightType>
-      <j.0:hasTravelType>
-        <rdf:Description rdf:about="https://FlighReport.com/International">
-          <rdfs:subClassOf rdf:resource="https://FlighReport.com/TravelType"/>
-        </rdf:Description>
-      </j.0:hasTravelType>
-      <j.0:hasDirection rdf:resource="https://FlighReport.com/Departure"/>
-    </j.0:reportsOn>
-    <j.0:countedPassenger rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
-    >299659</j.0:countedPassenger>
-    <j.0:reportedFrom rdf:parseType="Resource">
-      <j.0:locatedIn rdf:parseType="Resource">
-      </j.0:locatedIn>
-    </j.0:reportedFrom>
+  <rdf:Description rdf:about="https://FlighReport.com/Charter">
+    <rdfs:subClassOf rdf:resource="https://FlighReport.com/FlightType"/>
   </rdf:Description>
-  <rdf:Description rdf:about="https://row-number/4">
-    <j.0:reportsOn rdf:parseType="Resource">
-      <j.0:isOfFlightType rdf:resource="https://FlighReport.com/Charter"/>
-      <j.0:hasTravelType rdf:resource="https://FlighReport.com/Domestic"/>
-      <j.0:hasDirection>
-        <rdf:Description rdf:about="https://FlighReport.com/Arrival">
-          <rdfs:subClassOf rdf:resource="https://FlighReport.com/Direction"/>
-        </rdf:Description>
-      </j.0:hasDirection>
-    </j.0:reportsOn>
-    <j.0:countedPassenger rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
-    >199</j.0:countedPassenger>
-    <j.0:reportedFrom rdf:parseType="Resource">
-      <j.0:locatedIn rdf:parseType="Resource">
-      </j.0:locatedIn>
-    </j.0:reportedFrom>
+  <rdf:Description rdf:about="https://FlighReport.com/isOfFlightType">
+    <rdfs:range rdf:resource="https://FlighReport.com/FlightType"/>
+    <rdfs:domain rdf:resource="https://FlighReport.com/Flights"/>
   </rdf:Description>
-  <rdf:Description rdf:about="https://row-number/3">
-    <j.0:reportsOn rdf:parseType="Resource">
-      <j.0:isOfFlightType rdf:resource="https://FlighReport.com/Charter"/>
-      <j.0:hasTravelType rdf:resource="https://FlighReport.com/Domestic"/>
-      <j.0:hasDirection rdf:resource="https://FlighReport.com/Departure"/>
-    </j.0:reportsOn>
-    <j.0:countedPassenger rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
-    >342</j.0:countedPassenger>
-    <j.0:reportedFrom rdf:parseType="Resource">
-      <j.0:locatedIn rdf:parseType="Resource">
-      </j.0:locatedIn>
-    </j.0:reportedFrom>
+  <rdf:Description rdf:about="https://FlighReport.com/reportsOn">
+    <rdfs:range rdf:resource="https://FlighReport.com/Flights"/>
+    <rdfs:domain rdf:resource="https://FlighReport.com/FlightReport"/>
   </rdf:Description>
-  <rdf:Description rdf:about="https://FlighReport.com/ExtractDate">
-    <rdfs:subClassOf rdf:resource="https://FlighReport.com/DateTime"/>
+  <rdf:Description rdf:about="https://FlighReport.com/locatedIn">
+    <rdfs:range rdf:resource="https://FlighReport.com/Country"/>
+    <rdfs:domain rdf:resource="https://FlighReport.com/Airport"/>
   </rdf:Description>
-  <rdf:Description rdf:about="https://row-number/0">
-    <j.0:reportsOn rdf:parseType="Resource">
-      <j.0:isOfFlightType rdf:resource="https://FlighReport.com/ScheduledCarrier"/>
-      <j.0:hasTravelType rdf:resource="https://FlighReport.com/Domestic"/>
-      <j.0:hasDirection rdf:resource="https://FlighReport.com/Arrival"/>
-    </j.0:reportsOn>
-    <j.0:countedPassenger rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
-    >1128607</j.0:countedPassenger>
-    <j.0:reportedFrom rdf:parseType="Resource">
-      <j.0:locatedIn rdf:parseType="Resource">
-      </j.0:locatedIn>
-    </j.0:reportedFrom>
+  <rdf:Description rdf:about="https://FlighReport.com/Arrival">
+    <rdfs:subClassOf rdf:resource="https://FlighReport.com/Direction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/reportedFrom">
+    <rdfs:range rdf:resource="https://FlighReport.com/Airport"/>
+    <rdfs:domain rdf:resource="https://FlighReport.com/FlightReport"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/ScheduledCarrier">
+    <rdfs:subClassOf rdf:resource="https://FlighReport.com/FlightType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://FlighReport.com/reportedDate">
+    <rdfs:range rdf:resource="https://FlighReport.com/reportedDate"/>
+    <rdfs:domain rdf:resource="https://FlighReport.com/FlightReport"/>
   </rdf:Description>
 </rdf:RDF>
