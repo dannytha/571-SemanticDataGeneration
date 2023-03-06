@@ -140,7 +140,7 @@ public class LAX_Converter {
         extractedDate.addProperty(RDFS.range, extractionDate);
         Property reportedDate = schema.createProperty(homepage+"reportedDate");
         reportedDate.addProperty(RDFS.domain, flightReport);
-        reportedDate.addProperty(RDFS.range, reportedDate);
+        reportedDate.addProperty(RDFS.range, reportPeriod);
         Property isOfFlightType = schema.createProperty(homepage+"isOfFlightType");
         isOfFlightType.addProperty(RDFS.domain, flights);
         isOfFlightType.addProperty(RDFS.range, flightType);

@@ -3679,9 +3679,6 @@
       </fr:locatedIn>
     </fr:reportedFrom>
   </fr:FlightReport>
-  <rdf:Description rdf:about="https://FlightReport.com/ReportPeriod">
-    <rdfs:subClassOf rdf:resource="https://FlightReport.com/DateTime"/>
-  </rdf:Description>
   <fr:FlightReport rdf:about="https://FlightReport.com/row/1811">
     <fr:reportsOn rdf:parseType="Resource">
       <fr:isOfFlightType rdf:resource="https://FlightReport.com/ScheduledCarrier"/>
@@ -33156,6 +33153,14 @@
       </fr:locatedIn>
     </fr:reportedFrom>
   </fr:FlightReport>
+  <rdf:Description rdf:about="https://FlightReport.com/reportedDate">
+    <rdfs:domain rdf:resource="https://FlightReport.com/FlightReport"/>
+    <rdfs:range>
+      <rdf:Description rdf:about="https://FlightReport.com/ReportPeriod">
+        <rdfs:subClassOf rdf:resource="https://FlightReport.com/DateTime"/>
+      </rdf:Description>
+    </rdfs:range>
+  </rdf:Description>
   <fr:FlightReport rdf:about="https://FlightReport.com/row/44">
     <fr:reportsOn rdf:parseType="Resource">
       <fr:isOfFlightType rdf:resource="https://FlightReport.com/ScheduledCarrier"/>
@@ -40720,8 +40725,4 @@
       </fr:locatedIn>
     </fr:reportedFrom>
   </fr:FlightReport>
-  <rdf:Description rdf:about="https://FlightReport.com/reportedDate">
-    <rdfs:domain rdf:resource="https://FlightReport.com/FlightReport"/>
-    <rdfs:range rdf:resource="https://FlightReport.com/reportedDate"/>
-  </rdf:Description>
 </rdf:RDF>
