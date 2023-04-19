@@ -29,11 +29,11 @@ public class App
         //Testing Query System
         String ont_1 = "output/Los_Angeles_International_Airport_Passenger_Count_By_Carrier_Type.rdf";
         String ont_2 = "output/LA_County_COVID_Cases.rdf";
+        SPARQL_Query q_sys = new SPARQL_Query();
 
         /*
          * Query Ontology 1
          */
-        SPARQL_Query q_sys = new SPARQL_Query();
         Path filePath = Path.of("queries/BasicFlightQuery.txt");
         String content = Files.readString(filePath);
         String queryString = content;
