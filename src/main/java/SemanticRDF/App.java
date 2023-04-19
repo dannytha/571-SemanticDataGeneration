@@ -30,22 +30,29 @@ public class App
         String ont_1 = "output/Los_Angeles_International_Airport_Passenger_Count_By_Carrier_Type.rdf";
         String ont_2 = "output/LA_County_COVID_Cases.rdf";
 
+        /*
+         * Query Ontology 1
+         */
         SPARQL_Query q_sys = new SPARQL_Query();
         Path filePath = Path.of("queries/BasicFlightQuery.txt");
         String content = Files.readString(filePath);
         String queryString = content;
-
         //q_sys.new_query(ont_1, queryString);
 
+        /*
+         * Query Ontology 2
+         */
         Path c_path = Path.of("queries/SimpleCovidQuery.txt");
         String c_content = Files.readString(c_path);
         String c_queryString = c_content;
-        
         //q_sys.new_query(ont_2, c_queryString);
         
+        /*
+         * Query Merged Ontology
+         */
         Path m = Path.of("queries/MergedQuery.txt");
         String m_content = Files.readString(m);
         String m_string = m_content;
-        q_sys.new_query(ont_1, ont_2, m_string);
+        //q_sys.new_query(ont_1, ont_2, m_string);
     }
 }
