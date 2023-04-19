@@ -1,0 +1,15 @@
+PREFIX cd:<https://COVIDReport.com/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fr:<https://FlightReport.com/>
+
+SELECT ?location ?cases ?date ?reportedDate ?countedPassengers
+WHERE {
+    ?location cd:CountyCaseCount ?cases .
+    ?location cd:Date ?date .
+        FILTER(?cases < 1500000 )
+    ?row fr:reportedDate ?reportedDate .
+    ?row fr:countedPassengers ?countedPassengers .
+        FILTER(?countedPassengers < 100 && ?countedPassengers > 80)
+}

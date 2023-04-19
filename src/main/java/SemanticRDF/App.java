@@ -41,9 +41,11 @@ public class App
         String c_content = Files.readString(c_path);
         String c_queryString = c_content;
         
-        q_sys.new_query(ont_2, c_queryString);
-
-
+        //q_sys.new_query(ont_2, c_queryString);
         
+        Path m = Path.of("queries/MergedQuery.txt");
+        String m_content = Files.readString(m);
+        String m_string = m_content;
+        q_sys.new_query(ont_1, ont_2, m_string);
     }
 }
