@@ -1,0 +1,9 @@
+PREFIX cd:<https://COVIDReport.com/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?location ?cases ?date
+WHERE {
+    ?location cd:CountyCaseCount ?cases .
+    ?location cd:Date ?date .
+        FILTER(?cases < 1500000 )
+}

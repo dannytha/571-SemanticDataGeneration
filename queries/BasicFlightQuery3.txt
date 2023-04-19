@@ -1,0 +1,13 @@
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fr:<https://FlightReport.com/>
+
+SELECT ?report ?countedPassengers
+WHERE {
+  ?report fr:reportsOn ?flights .
+  ?flights fr:hasTravelType ?travelType .
+  ?travelType rdfs:subClassOf fr:TravelType .
+    FILTER(?travelType = fr:Domestic)
+  ?report fr:countedPassengers ?countedPassengers 
+    FILTER(?countedPassengers < 100)
+}

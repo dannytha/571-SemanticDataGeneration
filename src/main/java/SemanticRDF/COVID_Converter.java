@@ -106,21 +106,21 @@ public class COVID_Converter {
         Resource covid_report = model.createResource(homepage+"CovidReport");
 
         Resource report = model.createResource(homepage+"Report");
-        Resource extraction_date = model.createResource(homepage+"/ExtractionDate");
+        Resource extraction_date = model.createResource(homepage+"ExtractionDate");
         Resource date_time = model.createResource(homepage+"DateTime");
-        Resource county_count = model.createResource(homepage+"/CountyCount");
-        Resource state_count = model.createResource(homepage+"/StateCount");
-        Resource location = model.createResource(homepage+"/Location");
-        Resource state = model.createResource(homepage+"/State");
-        Resource county = model.createResource(homepage+"/County");
+        Resource county_count = model.createResource(homepage+"CountyCount");
+        Resource state_count = model.createResource(homepage+"StateCount");
+        Resource location = model.createResource(homepage+"Location");
+        Resource state = model.createResource(homepage+"State");
+        Resource county = model.createResource(homepage+"County");
 
         //extraction_date.addProperty(RDFS.subPropertyOf, covid_report);
         //county_count.addProperty(RDFS.subPropertyOf, covid_report);
         //state_count.addProperty(RDFS.subPropertyOf, covid_report);
-        Individual cc_individual = model.createIndividual(county_count);
-        Individual sc_individual = model.createIndividual(state_count);
-        Individual ed_individual = model.createIndividual(extraction_date);
-        Individual cr_individual = model.createIndividual(homepage+"CovidReport/row-"+i, covid_report);
+        Individual cc_individual = model.createIndividual(homepage+"CovidReport/row-"+i+"/", county_count);
+        Individual sc_individual = model.createIndividual(homepage+"CovidReport/row-"+i+"/", state_count);
+        Individual ed_individual = model.createIndividual(homepage+"CovidReport/row-"+i+"/", extraction_date);
+        Individual cr_individual = model.createIndividual(homepage+"CovidReport/row-"+i+"/", covid_report);
 
         report.addProperty(RDF.type, RDFS.Class);
         county_count.addProperty(RDF.type, RDFS.Class);

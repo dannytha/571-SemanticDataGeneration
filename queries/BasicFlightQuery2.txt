@@ -1,0 +1,15 @@
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fr:<https://FlightReport.com/>
+
+SELECT ?flightReport ?travelTypeDescription ?flightTypeDescription ?directionDescription
+WHERE {
+  ?flightReport rdf:type fr:FlightReport .
+  ?flightReport fr:reportsOn ?flights .
+  ?flights fr:hasTravelType ?travelTypeDescription .
+  ?travelTypeDescription rdfs:subClassOf fr:TravelType .
+  ?flights fr:isOfFlightType ?flightTypeDescription .
+  ?flightTypeDescription rdfs:subClassOf fr:FlightType .
+  ?flights fr:hasDirection ?directionDescription .
+  ?directionDescription rdfs:subClassOf fr:Direction .
+}
