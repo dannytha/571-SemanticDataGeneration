@@ -1,0 +1,38 @@
+# In the month with the highest number of LA County COVID cases in 2020, did Domestic Arrivals or International Arrivals have higher traffic (passenger count)?
+
+
+PREFIX cd:<https://COVIDReport.com/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fr:<https://FlightReport.com/>
+
+SELECT ?travelType ?direction (SUM(?countedPassengers) as ?totalPassengerCount) ?output_month
+WHERE
+{
+
+    {SELECT ?month (SUM(?newcases) as ?totalcases) ?date
+        WHERE {
+            ?entry cd:Date ?date .
+                FILTER (?date > "2020-01-01T00:00:00Z"^^xsd:dateTime && ?date < "2021-01-01T00:00:00Z"^^xsd:dateTime )  .
+            ?entry cd:NewCountyCaseCount ?newcases .
+            } 
+            GROUP BY (month(?date) AS ?month) ?date
+            ORDER BY DESC(?totalcases) 
+            LIMIT 1
+    }
+
+    ?entry fr:reportedDate ?reportdate .
+    ?reportdate fr:hasDateTime ?reportedDate .
+        FILTER(month(?reportedDate) = month(?date) && year(?reportedDate) = year(?date))  .
+    
+    ?entry fr:reportsOn ?flights .
+    ?flights fr:isOfFlightType ?flightType .
+    ?flights fr:hasTravelType ?travelType .
+    ?flights fr:hasDirection ?direction .
+    ?entry fr:countedPassengers ?countedPassengers
+        FILTER(?direction = fr:Arrival)
+}
+GROUP BY ?travelType ?direction (month(?date) AS ?output_month)
+ORDER BY DESC(?totalPassengerCount)
+LIMIT 1
