@@ -50,10 +50,13 @@ public class App
         /*
          * Query Merged Ontology
          */
+        /*
+         * 
         Path m = Path.of("queries/MergedQuery.txt");
         String m_content = Files.readString(m);
         String m_string = m_content;
-        //q_sys.new_query(ont_1, ont_2, m_string);
+        q_sys.new_query(ont_1, ont_2, m_string);
+         */
 
         /*
          * Complex Query Merged Ontology
