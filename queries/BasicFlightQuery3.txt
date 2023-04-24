@@ -2,12 +2,17 @@ PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX fr:<https://FlightReport.com/>
 
-SELECT ?report ?countedPassengers
+SELECT (month(?date) AS ?month) ?countedPassengers
 WHERE {
   ?report fr:reportsOn ?flights .
+  ?report fr:reportedDate ?period .
+  ?period fr:hasDateTime ?date .
+    FILTER(year(?date) = 2021) .
   ?flights fr:hasTravelType ?travelType .
   ?travelType rdfs:subClassOf fr:TravelType .
     FILTER(?travelType = fr:Domestic)
+  ?flights fr:hasDirection ?direction .
+    FILTER(?direction = fr:Arrival)
   ?report fr:countedPassengers ?countedPassengers 
     FILTER(?countedPassengers < 100)
 }
