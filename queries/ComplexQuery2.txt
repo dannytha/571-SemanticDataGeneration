@@ -1,0 +1,36 @@
+# Within the last quarter of 2020, were the 2 months with the least amount of domestic arrivals also the months with the least amount of newly reported COVID cases? 
+PREFIX cd:<https://COVIDReport.com/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fr:<https://FlightReport.com/>
+
+SELECT (IF(COUNT(DISTINCT ?yearMonth) = 2, "YES", "NO") AS ?answer)
+WHERE {
+{
+SELECT ?yearMonth (SUM(?newcases) as ?totalcases)
+WHERE {
+    ?entry cd:Date ?date .
+    BIND(year(?date) AS ?year) .
+    BIND(month(?date) AS ?month) .
+        FILTER (?date >= "2020-08-01T00:00:00Z"^^xsd:dateTime && ?date < "2021-01-01T00:00:00Z"^^xsd:dateTime )  .
+    ?entry cd:NewCountyCaseCount ?newcases .
+} GROUP BY (xsd:gYearMonth(concat(str(?year), '-', str(?month))) as ?yearMonth)
+ORDER BY ASC(?totalcases) LIMIT 2 
+}
+UNION {
+SELECT ?yearMonth (SUM(?countedPassengers) as ?totalPassengers) 
+WHERE {
+    ?report fr:reportedDate ?reportdate .
+    ?reportdate fr:hasDateTime ?reportedDate .
+        FILTER (?reportedDate >= "2020-07-31T00:00:00Z"^^xsd:dateTime && ?reportedDate < "2021-01-01T00:00:00Z"^^xsd:dateTime )  .
+    ?report fr:reportsOn ?flights .
+    ?flights fr:isOfFlightType ?flightType .
+    ?flights fr:hasTravelType ?travelType .
+    ?flights fr:hasDirection ?direction .
+        FILTER (?travelType = fr:Domestic && ?direction = fr:Arrival) .
+    ?report fr:countedPassengers ?countedPassengers .
+} GROUP BY (xsd:gYearMonth(concat(str(year(?reportedDate)), '-', str(month(?reportedDate)))) as ?yearMonth)
+ORDER BY ASC(?totalPassengers) LIMIT 2
+}
+}

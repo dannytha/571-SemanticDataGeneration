@@ -64,7 +64,15 @@ public class App
         Path cm = Path.of("queries/ComplexMergedQuery.txt");
         String cm_content = Files.readString(cm);
         String cm_string = cm_content;
-        q_sys.new_query(ont_1, ont_2, cm_string);
+        //q_sys.new_query(ont_1, ont_2, cm_string);
+
+        /*
+         * Complex Query 2 Merged Ontology
+         */
+        Path cm2 = Path.of("queries/ComplexQuery2.txt");
+        String cm2_content = Files.readString(cm2);
+        String cm2_string = cm2_content;
+        q_sys.new_query(ont_1, ont_2, cm2_string);
 
     }
 }
