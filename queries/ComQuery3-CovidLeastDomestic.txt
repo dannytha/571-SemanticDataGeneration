@@ -1,0 +1,33 @@
+# How many new covid cases in LA county were there the month with the least domestic passengers arriving in LAX?
+
+PREFIX cd:<https://COVIDReport.com/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fr:<https://FlightReport.com/>
+
+SELECT DISTINCT ?month ?year (SUM(?new_cases) AS ?total_new_cases)
+WHERE
+{
+    #Finding the month with least domestic passengers
+    {
+    SELECT ?min_month (SUM(?passenger_count) AS ?total_passenger_count) ?reportedDate
+        WHERE {
+            ?flightReport fr:reportsOn ?flights ;
+                            fr:reportedDate ?reportdate ;
+                            fr:countedPassengers ?passenger_count .
+            ?flights fr:hasTravelType fr:Domestic ;
+                        fr:hasDirection fr:Arrival .
+            ?reportdate fr:hasDateTime ?reportedDate .
+            BIND(month(?reportedDate) AS ?min_month)
+        }
+        GROUP BY ?min_month ?reportedDate
+        ORDER BY ASC(?total_passenger_count)
+        LIMIT 1
+    }
+
+    ?covidReport cd:Date ?date .
+        FILTER (month(?date) = ?min_month && year(?date) = year(?reportedDate)) .
+    ?covidReport cd:NewCountyCaseCount ?new_cases .
+} 
+GROUP BY (month(?date) AS ?month) (year(?date) AS ?year) ?total_new_cases
