@@ -12,8 +12,6 @@ WHERE
 SELECT ?entry ?reportedDate ?extractedDate ?reportedYearMonth ?extractedYearMonth ?targetYearMonth
 WHERE {
     {
-        SELECT ?maxmonth
-        WHERE {
             {
                 SELECT ?month (SUM(?newcases) as ?totalcases)
                 WHERE {
@@ -23,9 +21,7 @@ WHERE {
                 } GROUP BY (month(?date) AS ?month) 
                 ORDER BY DESC(?totalcases) LIMIT 1
             }
-            BIND(?month as ?maxmonth)
         }
-    }
     ?entry fr:reportedDate ?reportdate .
     ?entry fr:extractedDate ?extractDate .
     ?reportdate fr:hasDateTime ?reportedDate .
@@ -36,9 +32,8 @@ WHERE {
     BIND(month(?extractedDate) AS ?extractMonth) .
     BIND(year(?extractedDate) AS ?extractYear) .
     BIND(xsd:gYearMonth(CONCAT(STR(?extractYear), "-", STR(?extractMonth))) AS ?extractedYearMonth)
-    BIND(?maxmonth as ?targetMonth) .
     BIND("2022" as ?targetYear) .
-    BIND(xsd:gYearMonth(CONCAT(STR(?targetYear), "-", STR(?targetMonth))) AS ?targetYearMonth)
+    BIND(xsd:gYearMonth(CONCAT(STR(?targetYear), "-", STR(?month))) AS ?targetYearMonth)
     FILTER(?reportedYearMonth < ?targetYearMonth && ?extractedYearMonth > ?targetYearMonth)
 } 
     }
