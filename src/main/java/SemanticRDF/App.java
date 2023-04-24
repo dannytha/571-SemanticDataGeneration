@@ -17,7 +17,7 @@ public class App
         //lax.csv_to_rdf();
 
         
-        COVID_Converter new_covid = new COVID_Converter("dataset/LA_County_COVID_Cases.csv");
+        //COVID_Converter new_covid = new COVID_Converter("dataset/LA_County_COVID_Cases.csv");
         
         //LAX_Converter new_laxa = new LAX_Converter("dataset/Los_Angeles_International_Airport_Passenger_Count_By_Carrier_Type.csv");
         //new_laxa.csv_to_rdf();
@@ -54,5 +54,14 @@ public class App
         String m_content = Files.readString(m);
         String m_string = m_content;
         //q_sys.new_query(ont_1, ont_2, m_string);
+
+        /*
+         * Complex Query Merged Ontology
+         */
+        Path cm = Path.of("queries/ComplexMergedQuery.txt");
+        String cm_content = Files.readString(cm);
+        String cm_string = cm_content;
+        q_sys.new_query(ont_1, ont_2, cm_string);
+
     }
 }

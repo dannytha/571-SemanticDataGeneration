@@ -1,0 +1,51 @@
+# In the month with the highest number of LA County COVID cases, did Domestic Arrivals or International Arrivals have higher traffic (passenger count)?
+PREFIX cd:<https://COVIDReport.com/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fr:<https://FlightReport.com/>
+
+SELECT ?travelType (SUM(?countedPassengers) as ?totalPassengerCount)
+WHERE
+{
+    {
+SELECT ?entry ?reportedDate ?extractedDate ?reportedYearMonth ?extractedYearMonth ?targetYearMonth
+WHERE {
+    {
+        SELECT ?maxmonth
+        WHERE {
+            {
+                SELECT ?month (SUM(?newcases) as ?totalcases)
+                WHERE {
+                    ?entry cd:Date ?date .
+                        FILTER (?date >= "2022-01-01T00:00:00Z"^^xsd:dateTime && ?date <= "2023-01-01T00:00:00Z"^^xsd:dateTime )  .
+                    ?entry cd:NewCountyCaseCount ?newcases .
+                } GROUP BY (month(?date) AS ?month) 
+                ORDER BY DESC(?totalcases) LIMIT 1
+            }
+            BIND(?month as ?maxmonth)
+        }
+    }
+    ?entry fr:reportedDate ?reportdate .
+    ?entry fr:extractedDate ?extractDate .
+    ?reportdate fr:hasDateTime ?reportedDate .
+    ?extractDate fr:hasDateTime ?extractedDate .
+    BIND(month(?reportedDate) AS ?reportMonth) .
+    BIND(year(?reportedDate) AS ?reportYear) .
+    BIND(xsd:gYearMonth(CONCAT(STR(?reportYear), "-", STR(?reportMonth))) AS ?reportedYearMonth)
+    BIND(month(?extractedDate) AS ?extractMonth) .
+    BIND(year(?extractedDate) AS ?extractYear) .
+    BIND(xsd:gYearMonth(CONCAT(STR(?extractYear), "-", STR(?extractMonth))) AS ?extractedYearMonth)
+    BIND(?maxmonth as ?targetMonth) .
+    BIND("2022" as ?targetYear) .
+    BIND(xsd:gYearMonth(CONCAT(STR(?targetYear), "-", STR(?targetMonth))) AS ?targetYearMonth)
+    FILTER(?reportedYearMonth < ?targetYearMonth && ?extractedYearMonth > ?targetYearMonth)
+} 
+    }
+    ?entry fr:reportsOn ?flights .
+    ?flights fr:isOfFlightType ?flightType .
+    ?flights fr:hasTravelType ?travelType .
+    ?flights fr:hasDirection ?direction .
+    ?entry fr:countedPassengers ?countedPassengers
+} GROUP BY ?travelType 
+ORDER BY DESC(?totalPassengerCount) 
