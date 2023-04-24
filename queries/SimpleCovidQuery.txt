@@ -1,9 +1,12 @@
 PREFIX cd:<https://COVIDReport.com/>
 PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?location ?cases ?date
-WHERE {
-    ?location cd:CountyCaseCount ?cases .
-    ?location cd:Date ?date .
-        FILTER(?cases < 1500000 )
-}
+
+SELECT ?month (SUM(?newcases) as ?totalcases)
+WHERE{
+    ?entry cd:Date ?date .
+    FILTER (?date >= "2021-01-01T00:00:00Z"^^xsd:dateTime && ?date <= "2022-01-01T00:00:00Z"^^xsd:dateTime) .
+    ?entry cd:NewCountyCaseCount ?newcases. 
+} GROUP BY (month(?date) AS ?month)
+ORDER BY DESC(?totalcases)
+LIMIT 1

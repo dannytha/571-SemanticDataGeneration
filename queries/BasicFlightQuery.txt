@@ -6,5 +6,5 @@ SELECT ?reportedDate ?countedPassengers
 WHERE {
   ?row fr:reportedDate ?reportedDate .
   ?row fr:countedPassengers ?countedPassengers .
-    FILTER(?countedPassengers < 100 && ?countedPassengers > 80)
+    FILTER(?countedPassengers > 1000000)
 }
