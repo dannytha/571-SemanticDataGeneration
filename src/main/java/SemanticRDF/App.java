@@ -2,6 +2,9 @@ package SemanticRDF;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
 
 
 public class App 
@@ -25,35 +28,41 @@ public class App
         //new_covid.csv_to_rdf();
         //snew_laxa.csv_to_rdf();
         
-
-        //Testing Query System
-        String complexity = args[0];
-
+        //FileSelect
+        JFileChooser jfc_onts = new JFileChooser();
+        File current_dir = new File(System.getProperty("user.dir"));
+        jfc_onts.setDialogTitle("Choose the ontology files to open (RDF/OWL)");
+        jfc_onts.setCurrentDirectory(current_dir);
+        jfc_onts.setMultiSelectionEnabled(true);;
+        int option = jfc_onts.showOpenDialog(null);
+        ArrayList<String> onts = new ArrayList<>();
+        if (option == JFileChooser.APPROVE_OPTION) {
+            System.out.println("===== LOADED SEMANTIC FILES =====");
+            File[] files = jfc_onts.getSelectedFiles();
+            for (File file : files) {
+               onts.add(file.getAbsolutePath()); 
+               System.out.println("- " + file.getAbsolutePath());
+            } 
+        } else {
+            System.exit(0);
+        }
+        jfc_onts.setMultiSelectionEnabled(false);
+        jfc_onts.setDialogTitle("Choose the SPARQL query you wish to open (.txt)");
+        int option2 = jfc_onts.showOpenDialog(null);
+        String sparql_query = null;
+        if (option2 == JFileChooser.APPROVE_OPTION) {
+            sparql_query = jfc_onts.getSelectedFile().getAbsolutePath();
+        } else {
+            System.exit(0);
+        }
+        
+        // Begin Query
         SPARQL_Query q_sys = new SPARQL_Query();
 
-        if(complexity.equals("s")){
-            String ont_1 = args[1];
-            String query_path = args[2];
-        /*
-         * Query Ontology
-         */
-        Path filePath = Path.of(query_path);
-        String content = Files.readString(filePath);
-        String queryString = content;
-        q_sys.new_query(ont_1, queryString);
-
-        }
-        else if(args[0].equals("c")){
-            String ont_1 = args[1];
-            String ont_2 = args[2];
-            String query_path = args[3];
-        /*
-         * Complex Query Merged Ontology
-         */
-        Path cm = Path.of(query_path);
+        Path cm = Path.of(sparql_query);
         String cm_content = Files.readString(cm);
         String cm_string = cm_content;
-        q_sys.new_query(ont_1, ont_2, cm_string);
-        }
+        q_sys.multi_query(onts, cm_string);
+        
     }
 }
