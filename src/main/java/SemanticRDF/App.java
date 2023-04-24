@@ -27,52 +27,33 @@ public class App
         
 
         //Testing Query System
-        String ont_1 = "output/Los_Angeles_International_Airport_Passenger_Count_By_Carrier_Type.rdf";
-        String ont_2 = "output/LA_County_COVID_Cases.rdf";
+        String complexity = args[0];
+
         SPARQL_Query q_sys = new SPARQL_Query();
 
+        if(complexity.equals("s")){
+            String ont_1 = args[1];
+            String query_path = args[2];
         /*
-         * Query Ontology 1
+         * Query Ontology
          */
-        Path filePath = Path.of("queries/BasicFlightQuery.txt");
+        Path filePath = Path.of(query_path);
         String content = Files.readString(filePath);
         String queryString = content;
-        //q_sys.new_query(ont_1, queryString);
+        q_sys.new_query(ont_1, queryString);
 
-        /*
-         * Query Ontology 2
-         */
-        Path c_path = Path.of("queries/SimpleCovidQuery.txt");
-        String c_content = Files.readString(c_path);
-        String c_queryString = c_content;
-        //q_sys.new_query(ont_2, c_queryString);
-        
-        /*
-         * Query Merged Ontology
-         */
-        /*
-         * 
-        Path m = Path.of("queries/MergedQuery.txt");
-        String m_content = Files.readString(m);
-        String m_string = m_content;
-        q_sys.new_query(ont_1, ont_2, m_string);
-         */
-
+        }
+        else if(args[0].equals("c")){
+            String ont_1 = args[1];
+            String ont_2 = args[2];
+            String query_path = args[3];
         /*
          * Complex Query Merged Ontology
          */
-        Path cm = Path.of("queries/ComplexMergedQuery.txt");
+        Path cm = Path.of(query_path);
         String cm_content = Files.readString(cm);
         String cm_string = cm_content;
-        //q_sys.new_query(ont_1, ont_2, cm_string);
-
-        /*
-         * Complex Query 2 Merged Ontology
-         */
-        Path cm2 = Path.of("queries/ComplexQuery2.txt");
-        String cm2_content = Files.readString(cm2);
-        String cm2_string = cm2_content;
-        q_sys.new_query(ont_1, ont_2, cm2_string);
-
+        q_sys.new_query(ont_1, ont_2, cm_string);
+        }
     }
 }
